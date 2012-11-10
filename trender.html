@@ -1,0 +1,120 @@
+<!--
+Contributors:
+Richard B. Johnson
+-->
+
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+    <title>Traffic Trender</title>
+	
+    <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
+	<link rel="stylesheet" type="text/css" href="controls/panel/ui.panel.css" />
+	<link rel="stylesheet" type="text/css" href="styles/uiTreeMap.css" />
+	<link rel="stylesheet" type="text/css" href="styles/uiFilter.css" />
+	<link rel="stylesheet" type="text/css" href="styles/uiLineGraph.css" />
+	
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
+	<script type="text/javascript" src="controls/d3/d3.v2.js"></script>
+	<script type="text/javascript" src="controls/d3/d3.v2.min.js"></script>
+	<script type="text/javascript" src="controls/panel/ui.panel.js"></script>
+	<script type="text/javascript" src="scripts/uiUtility.js"></script>
+	<script type="text/javascript" src="scripts/uiTreeMap.js"></script>
+	<script type="text/javascript" src="scripts/uiFilter.js"></script>
+	<script type="text/javascript" src="scripts/uiLineGraph.js"></script>
+</head>
+
+<body>
+
+<!-- Tree Map Panel -->
+
+<div id="uiTreeMapPanel">
+	<h2>Tree Map</h2>
+	<div id="uiTreeMapContent">
+	    <label>Size:</label>
+	    <br />
+	    <select id="uiTreeMap_size">
+	        <option>Impact Factor</option>
+	        <option>Maximum Length</option>
+	        <option>Time</option>
+	    </select>
+	    <br />
+	    
+	    <label>Color:</label>
+	    <br />
+	    <select id="uiTreeMap_color">
+	        <option>Impact Factor</option>
+	        <option>Maximum Length</option>
+	        <option>Time</option>
+	    </select>
+    </div>
+</div>
+
+<!-- Filter Control Panel -->
+
+<div id="uiFilterPanel">
+	<h2>Filter</h2>
+	<div id="uiFilterContent">
+	    <label>Search:</label>
+	    <br />
+	    <input id="uiFilter_searchTerms" type="text" />
+	    <br />
+	    
+        <div id="uiFilter_accordion">
+	        <h4>State</h4>
+	        <div id="uiFilter_accState">
+				<input type="checkbox" /> <label>This</label><br />
+				<input type="checkbox" /> <label>Is</label><br />
+				<input type="checkbox" /> <label>A</label><br />
+				<input type="checkbox" /> <label>Mockup</label><br />
+				<input type="checkbox" /> <label>Demonstration</label><br />
+	        </div>
+
+	        <h4>County</h4>
+	        <div id="uiFilter_accCounty">
+				<input type="checkbox" /> <label>This</label><br />
+				<input type="checkbox" /> <label>Is</label><br />
+				<input type="checkbox" /> <label>A</label><br />
+				<input type="checkbox" /> <label>Mockup</label><br />
+				<input type="checkbox" /> <label>Demonstration</label><br />
+	        </div>
+
+	        <h4>Road</h4>
+	        <div id="uiFilter_accRoad">
+				<input type="checkbox" /> <label>This</label><br />
+				<input type="checkbox" /> <label>Is</label><br />
+				<input type="checkbox" /> <label>A</label><br />
+				<input type="checkbox" /> <label>Mockup</label><br />
+				<input type="checkbox" /> <label>Demonstration</label><br />
+	        </div>
+        </div>
+        
+        <input id="uiFilter_searchButton" 
+               type="button"
+               value="Apply" />
+    </div>
+</div>
+
+<!-- Line Graph Panel -->
+
+<div id="uiLineGraphPanel">
+	<h2>Line Graph</h2>
+	<div id="uiLineGraphContent">
+        <input id="uiLineGraph_impactFactor" 
+               type="radio" />
+	    <label>Impact Factor</label>
+        <br />
+        <input id="uiLineGraph_maximumLength" 
+               type="radio" />
+	    <label>Maximum Length</label>
+        <br />
+        <input id="uiLineGraph_time" 
+               type="radio" />
+	    <label>Time</label>
+        <br />
+</div>
+
+</body>
+</html>

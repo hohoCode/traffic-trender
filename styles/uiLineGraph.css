@@ -1,0 +1,37 @@
+/*
+Line Graph Panel UI stylesheet
+
+Contributors:
+Richard B. Johnson
+*/
+
+#uiLineGraphPanel
+{
+	width:200px;
+	padding:2px;
+	overflow:hidden;
+}
+
+#uiLineGraphPanel .ui-panel-content-text
+{
+	padding-left:0.6em;
+	padding-right:0.6em;
+}
+
+#uiLineGraphContent
+{
+	background-image:none;
+	background-color:rgb(245,245,255);
+}
+
+#uiLineGraphContent,
+#uiLineGraphContent label
+{
+	font-size:11pt;
+}
+
+#uiLineGraph_impactFactor,
+#uiLineGraph_maximumLength
+{
+	margin-bottom: 1em;
+}

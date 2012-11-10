@@ -1,0 +1,43 @@
+/*
+Tree Map Panel UI stylesheet
+
+Contributors:
+Richard B. Johnson
+*/
+
+#uiTreeMapPanel
+{
+	width:200px;
+	padding:2px;
+	overflow:hidden;
+}
+
+#uiTreeMapPanel .ui-panel-content-text
+{
+	padding-left:0.6em;
+	padding-right:0.6em;
+}
+
+#uiTreeMapContent
+{
+	background-image:none;
+	background-color:rgb(245,245,255);
+}
+
+#uiTreeMapContent,
+#uiTreeMapContent label
+{
+	font-size:11pt;
+}
+
+#uiTreeMapContent select
+{
+	font-size:10pt;
+	margin-top:0.5em;
+	width:100%;
+}
+
+#uiTreeMap_size
+{
+	margin-bottom:1em;
+}

@@ -1,0 +1,79 @@
+/*
+Filter Panel UI stylesheet
+
+Contributors:
+Richard B. Johnson
+*/
+
+#uiFilterPanel
+{
+	width:200px;
+	padding:2px;
+	overflow:hidden;
+}
+
+#uiFilterPanel .ui-panel-content-text
+{
+	padding-left:0.6em;
+	padding-right:0.6em;
+}
+
+#uiFilterContent
+{
+	background-image:none;
+	background-color:rgb(245,245,255);
+}
+
+#uiFilterContent,
+#uiFilterContent label
+{
+	font-size:11pt;
+}
+
+#uiFilterContent input,
+#uiFilter_accordion,
+#uiFilter_accordion label
+{
+	font-size:10pt;
+}
+
+#uiFilter_searchTerms,
+#uiFilter_searchButton
+{
+	width:100%;
+}
+#uiFilter_searchTerms
+{
+	margin-top:0.5em;
+	margin-bottom:1em;
+}
+
+#uiFilter_searchButton
+{
+	height:2em;
+	margin-top:1em;
+	text-align:center;
+	vertical-align:middle;
+}
+
+#uiFilter_accordion
+{
+	white-space:nowrap;
+	overflow:hidden;
+}
+
+#uiFilter_accordion input
+{
+	margin-bottom:0.5em;
+}
+
+#uiFilter_accordion h4
+{
+	padding-top:2px;
+	padding-bottom:2px;
+}
+
+#uiFilter_accordion .ui-accordion-content
+{
+	padding:0.3em;
+}
