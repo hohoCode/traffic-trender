@@ -8,7 +8,7 @@ var uiTreeMap = uiTreeMap || {}; // namespace
 $(document).ready(function(){
     $("#uiTreeMapPanel").panel({
         stackable:true
-    });    
+    });
 });
 
 uiTreeMap.applySize = function() {

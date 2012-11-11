@@ -7,7 +7,7 @@ Richard B. Johnson
 
 #uiLineGraphPanel
 {
-	width:200px;
+	width:250px;
 	padding:2px;
 	overflow:hidden;
 }
@@ -30,8 +30,24 @@ Richard B. Johnson
 	font-size:11pt;
 }
 
+#uiLineGraph_impactFactor
+{
+	margin-top: 0.3em;
+}
+
 #uiLineGraph_impactFactor,
 #uiLineGraph_maximumLength
 {
-	margin-bottom: 1em;
+	margin-bottom: 0.6em;
+}
+
+#uiLineGraph_maximumLength,
+#uiLineGraph_time
+{
+	margin-top: 0.6em;
+}
+
+#uiLineGraph_time
+{
+	margin-bottom: 0.3em;
 }

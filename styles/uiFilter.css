@@ -7,7 +7,7 @@ Richard B. Johnson
 
 #uiFilterPanel
 {
-	width:200px;
+	width:250px;
 	padding:2px;
 	overflow:hidden;
 }
@@ -25,30 +25,25 @@ Richard B. Johnson
 }
 
 #uiFilterContent,
-#uiFilterContent label
+#uiFilterContent.label,
+#uiFilterContent input
 {
 	font-size:11pt;
 }
 
-#uiFilterContent input,
-#uiFilter_accordion,
-#uiFilter_accordion label
-{
-	font-size:10pt;
-}
-
 #uiFilter_searchTerms,
-#uiFilter_searchButton
+#uiFilter_applyButton
 {
 	width:100%;
 }
+
 #uiFilter_searchTerms
 {
 	margin-top:0.5em;
 	margin-bottom:1em;
 }
 
-#uiFilter_searchButton
+#uiFilter_applyButton
 {
 	height:2em;
 	margin-top:1em;
@@ -56,24 +51,14 @@ Richard B. Johnson
 	vertical-align:middle;
 }
 
-#uiFilter_accordion
+#uiFilter_tree
 {
-	white-space:nowrap;
-	overflow:hidden;
+	display:none;
 }
 
-#uiFilter_accordion input
+#uiFilter_tree span.dynatree-icon
 {
-	margin-bottom:0.5em;
-}
-
-#uiFilter_accordion h4
-{
-	padding-top:2px;
-	padding-bottom:2px;
-}
-
-#uiFilter_accordion .ui-accordion-content
-{
-	padding:0.3em;
+	width:0;
+	padding:0;
+	margin:0;
 }
