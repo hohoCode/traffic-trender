@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>Traffic Treemap</title>
+      <script src="controls/jquery/jquery-latest.js"></script>
+      <script src="controls/d3/d3.v2.js"></script>
+      <style type="text/css">
+
+          rect {
+              fill: none;
+              stroke: #fff;
+          }
+
+          text {
+              font: 10px sans-serif;
+          }
+
+          .children:hover rect.child,
+          .grandparent:hover rect {
+              fill: #aaa;
+          }
+
+      </style>
+  </head>
+  <body>
+
+  <div id="body"></div>
+    <script src="treemap.js"></script>
+  </body>
+</html>
