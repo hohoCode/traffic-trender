@@ -1,0 +1,64 @@
+{ 
+"type": "impact factor",
+"locations": [
+    {
+        "name": "Location_1",
+        "bottlenecks": [
+            {
+                "date": "2010-01",
+                "value": 40.34
+            },
+            {
+                "date": "2010-02",
+                "value": 80.34
+            },
+            {
+                "date": "2010-03",
+                "value": 60.34
+            },
+            {
+                "date": "2010-04",
+                "value": 180.34
+            },
+            {
+                "date": "2010-06",
+                "value": 100.34
+            }
+        ]
+    },
+    {
+        "name": "Location_2",
+        "bottlenecks": [
+            {
+                "date": "2010-01",
+                "value": 10.34
+            },
+            {
+                "date": "2010-02",
+                "value": 15.34
+            },
+            {
+                "date": "2010-03",
+                "value": 12.34
+            }
+        ]
+    },
+    {
+        "name": "Location_3",
+        "bottlenecks": [
+            {
+                "date": "2010-01",
+                "value": 60.34
+            },
+            {
+                "date": "2010-02",
+                "value": 50.34
+            },
+            {
+                "date": "2010-03",
+                "value": 30.34
+            }
+        ]
+    }
+    ]
+}
