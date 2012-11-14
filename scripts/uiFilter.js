@@ -3,61 +3,9 @@
 // Contributors:
 // Richard B. Johnson
 
-var demoTree = [
-    {title: "Maryland", key: "Maryland",
-        children: [
-            {title: "County 1", key: "Maryland, County 1",
-                children: [
-                    {title: "Street 1", key: "Maryland, County 1, Street 1", select: true },
-                    {title: "Street 2", key: "Maryland, County 1, Street 2", select: true },
-                    {title: "Street 3", key: "Maryland, County 1, Street 3", select: true },
-                ]
-            },
-            {title: "County 2", key: "Maryland, County 2",
-                children: [
-                    {title: "Street 1", key: "Maryland, County 2, Street 1", select: true },
-                    {title: "Street 2", key: "Maryland, County 2, Street 2", select: true },
-                    {title: "Street 3", key: "Maryland, County 2, Street 3", select: true },
-                    {title: "Street 4", key: "Maryland, County 2, Street 4", select: true },
-                ]
-            },
-            {title: "County 3", key: "Maryland, County 3",
-                children: [
-                    {title: "Street 1", key: "Maryland, County 3, Street 1", select: true },
-                    {title: "Street 2", key: "Maryland, County 3, Street 2", select: true },
-                ]
-            }
-        ]
-    },
-    {title: "Virginia", key: "Virginia",
-        children: [
-            {title: "County 1", key: "Virginia, County 1",
-                children: [
-                    {title: "Street 1", key: "Virginia, County 1, Street 1", select: true },
-                    {title: "Street 2", key: "Virginia, County 1, Street 2", select: true },
-                    {title: "Street 3", key: "Virginia, County 1, Street 3", select: true },
-                    {title: "Street 4", key: "Virginia, County 1, Street 4", select: true },
-                ]
-            },
-            {title: "County 2", key: "Virginia, County 2",
-                children: [
-                    {title: "Street 1", key: "Virginia, County 2, Street 1", select: true },
-                    {title: "Street 2", key: "Virginia, County 2, Street 2", select: true },
-                ]
-            },
-            {title: "County 3", key: "Virginia, County 3",
-                children: [
-                    {title: "Street 1", key: "Virginia, County 3, Street 1", select: true },
-                    {title: "Street 2", key: "Virginia, County 3, Street 2", select: true },
-                    {title: "Street 3", key: "Virginia, County 3, Street 3", select: true },
-                ]
-            }
-        ]
-    }
-];
-
-
 var uiFilter = uiFilter || {}; // namespace
+
+uiFilter.data = $.getJSON("backend/sources/filter_menu_data.json");
 
 $(document).ready(function(){
     $("#uiFilterPanel").panel({
@@ -67,7 +15,7 @@ $(document).ready(function(){
     $("#uiFilter_tree").dynatree({
         checkbox: true,
         selectMode: 3,
-        children: demoTree
+        children: eval(uiFilter.data.responseText)
     });
     
 	uiFilter.resize();
