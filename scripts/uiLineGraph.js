@@ -10,15 +10,13 @@ $(document).ready(function(){
         stackable:true
     });
     
-    $("#uiLineGraph_impactFactor").change(uiTreeMap.change);
-    $("#uiLineGraph_maximumLength").change(uiTreeMap.change);
-    $("#uiLineGraph_time").change(uiTreeMap.change);
+    $("input:radio[name=uiGraphSettingGroup]").click(uiLineGraph.apply);
 });
 
-uiTreeMap.change = function() {
-	rb1 = $("#uiTreeMap_impactFactor").val();
-	rb2 = $("#uiTreeMap_maximumLength").val();
-	rb3 = $("#uiTreeMap_time").val();
+uiLineGraph.apply = function() {
+	sel = $(this).val();
+	
+	console.log( sel );
 	
 	/* update line graph here */
 }

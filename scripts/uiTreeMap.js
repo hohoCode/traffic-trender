@@ -9,14 +9,15 @@ $(document).ready(function(){
     $("#uiTreeMapPanel").panel({
         stackable:true
     });
+    
+    $("#uiTreeMap_applyButton").click(uiTreeMap.apply);    
 });
 
-uiTreeMap.applySize = function() {
-	obj = $("#uiTreeMap_size");
-	val = obj.val();
-}
-
-uiTreeMap.applyColor = function() {
-	obj = $("#uiTreeMap_color");
-	val = obj.val();
+uiTreeMap.apply = function() {
+	size = $("#uiTreeMap_size").val();
+	color = $("#uiTreeMap_color").val();
+	
+    console.log( "Size: " + size + ", Color: " + color );
+    
+    /* update the treemap here */
 }
