@@ -4,16 +4,18 @@
     <title>Zoomable treemap</title>
     <style>
 
-        /*@import url(style.css?20120608);*/
+        @import url(styles/style.css);
 
         #chart {
-            width: 960px;
-            height: 500px;
+            width: 1200px;
+            height: 620px;
             background: #bbb;
+            /*margin: 40px auto auto;*/
         }
 
         text {
             pointer-events: none;
+            font-weight: bold;
         }
 
         .grandparent text {
@@ -34,7 +36,7 @@
             fill: #fff;
         }
 
-        .children rect.parent,
+        .states rect.parent,
         .grandparent rect {
             cursor: pointer;
         }
@@ -43,7 +45,7 @@
             pointer-events: all;
         }
 
-        .children:hover rect,
+        .states:hover rect,
         .grandparent:hover rect {
             fill: #aaa;
             fill-opacity: .3;
@@ -57,14 +59,14 @@
 <script>
 
     var margin = {top: 20, right: 0, bottom: 0, left: 0},
-            width = 960,
-            height = 500 - margin.top - margin.bottom,
+            width = 1280 - 80,
+            height = 800 - 180 - margin.top - margin.bottom,
             formatNumber = d3.format(",d"),
             transitioning;
 
     var color = d3.scale.linear()
-            .domain([0, 4000000])
-            .range(["green", "red"]);
+            .domain([1, 40000, 600000])
+            .range(["green", "white", "red"]);
 
     var x = d3.scale.linear()
             .domain([0, width])
@@ -75,7 +77,7 @@
             .range([0, height]);
 
     var treemap = d3.layout.treemap()
-            .children(function(d, depth) { return depth ? null : d.children; })
+            //.children(function(d, depth) { return depth ? null: d.children; })
             .sort(function(a, b) { return a.value - b.value; })
             .ratio(height / width * 0.5 * (1 + Math.sqrt(5)))
             .round(false);
@@ -102,12 +104,15 @@
             .attr("y", 6 - margin.top)
             .attr("dy", ".75em");
 
-    d3.json("backend/sources/treemap_source_data_mod.json", function(root) {
+    var url = "backend/sources/treemap_source_data_mod.json";
+
+    var runTreemap = function(root) {
 
         initialize(root);
         accumulate(root);
         accumulateColor(root);
         layout(root);
+
         display(root);
 
         function initialize(root) {
@@ -127,7 +132,7 @@
         function accumulateColor(d) {
             return d.children
                     ? d.color = d.children.reduce(function(p, v) { return p + accumulateColor(v); }, 0)
-                    : parseInt(d.color);
+                    : parseInt(d.color, 10);
         }
 
         // Compute the treemap layout recursively such that each group of siblings
@@ -140,13 +145,14 @@
         function layout(d) {
             if (d.children) {
                 treemap.nodes({children: d.children});
-                //console.log(d);
+                //console.log(value);
                 d.children.forEach(function(c) {
                     c.x = d.x + c.x * d.dx;
                     c.y = d.y + c.y * d.dy;
                     c.dx *= d.dx;
                     c.dy *= d.dy;
                     c.parent = d;
+                    c.depth = d.depth + 1;
                     layout(c);
                 });
             }
@@ -161,20 +167,30 @@
 
             var g1 = svg.insert("g", ".grandparent")
                     .datum(d)
-                    .attr("class", "depth");
+                    .attr("class", "treemap");
 
             var g = g1.selectAll("g")
                     .data(d.children)
                     .enter().append("g");
 
             g.filter(function(d) { return d.children; })
-                    .classed("children", true)
+                    .classed("states", true)
                     .on("click", transition);
 
-            g.selectAll(".child")
+            var g2 = g.selectAll(".states")
+                    .data(function(d) { return d.children || [d]; })
+                    .enter()
+                    .append("g")
+                    .attr("class", "county");
+            var g3 = g2.selectAll(".county")
+                    .data(function(d) { return d.children || [d]; })
+                    .enter()
+                    .append("g")
+                    .attr("class", "road");
+            g3.selectAll(".road")
                     .data(function(d) { return d.children || [d]; })
                     .enter().append("rect")
-                    .attr("class", "child")
+                    .attr("class", "location")
                     .style("fill", function(d) { return color(d.color);} )
                     .call(rect);
 
@@ -182,7 +198,7 @@
                     .attr("class", "parent")
                     .call(rect)
                     .append("title")
-                    .text(function(d) { return formatNumber(d.value); });
+                    //.text(function(d) { return formatNumber(d.value); });
 
             g.append("text")
                     .attr("dy", ".75em")
@@ -206,7 +222,7 @@
                 svg.style("shape-rendering", null);
 
                 // Draw child nodes on top of parent nodes.
-                svg.selectAll(".depth").sort(function(a, b) { return a.depth - b.depth; });
+                //svg.selectAll(".depth").sort(function(a, b) { return a.depth - b.depth; });
 
                 // Fade-in entering text.
                 g2.selectAll("text").style("fill-opacity", 0);
@@ -222,6 +238,7 @@
                     svg.style("shape-rendering", "crispEdges");
                     transitioning = false;
                 });
+
             }
 
             return g;
@@ -247,7 +264,13 @@
                     ? name(d.parent) + "." + d.name
                     : d.name;
         }
-    });
+
+        function popup(d) {
+            return console.log(d.name);
+        }
+    }
+
+    d3.json(url, runTreemap);
 
 </script>
 </body>
