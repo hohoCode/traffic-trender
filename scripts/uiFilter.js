@@ -44,13 +44,15 @@ uiFilter.search = function() {
 uiFilter.apply = function() {
     root = $("#uiFilter_tree").dynatree("getRoot");
     sel = root.tree.getSelectedNodes();
-    map = {}
+    data = {}
 
     for (var i in sel) {
-        map[ sel[i].data.key ] = true;
+        data[ sel[i].data.key ] = true;
     }
     
-    console.log( map );       
+    console.log( data );
+    
+    /* update the treemap here */
 }
 
 uiFilter.resize = function() {
