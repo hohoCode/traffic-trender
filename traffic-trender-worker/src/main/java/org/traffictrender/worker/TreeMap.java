@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-
 public class TreeMap {
 
     private static String selectionClauseIF = "SELECT sum(impact_factor)/count(*) as output FROM traffic.bottlenecks where ";
@@ -108,13 +107,13 @@ public class TreeMap {
 	return output;
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
 	List<Location> inputFilter = new LinkedList<Location>(); //Input Argument
 	//inputFilter.add(new Location("SC", "GREENVILLE", "I-185 @ I-385/Exit 1B"));
 	//inputFilter.add(new Location("SC", "GREENVILLE", "I-385 @ SC-49/Exit 5"));
-	inputFilter.add(new Location("SC", "GREENVILLE", null));
-	inputFilter.add(new Location("VA", "FAIRFAX", null));
-	inputFilter.add(new Location("NC", "WAKE", null));
+	inputFilter.add(new Location("SC", "GREENVILLE", null, null));
+	inputFilter.add(new Location("VA", "FAIRFAX", null, null));
+	inputFilter.add(new Location("NC", "WAKE", null, null));
 	TreeMap.generatorResults(inputFilter, MeasurementType.impactFactor, MeasurementType.length);
-    }
+    }*/
 }
