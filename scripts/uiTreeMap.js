@@ -5,13 +5,13 @@
 
 var uiTreeMap = uiTreeMap || {}; // namespace
 
-$(document).ready(function(){
+uiTreeMap.init = function() {
     $("#uiTreeMapPanel").panel({
         stackable:true
     });
     
     $("#uiTreeMap_applyButton").click(uiTreeMap.apply);    
-});
+}
 
 uiTreeMap.apply = function() {
 	size = $("#uiTreeMap_size").val();

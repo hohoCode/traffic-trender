@@ -5,19 +5,19 @@
 
 var uiFilter = uiFilter || {}; // namespace
 
-uiFilter.data = $.getJSON("backend/sources/filter_menu_data.json");
-
-$(document).ready(function(){
+uiFilter.init = function(filepath) {
     $("#uiFilterPanel").panel({
         stackable:true
     });
     
-    $("#uiFilter_tree").dynatree({
-        checkbox: true,
-        selectMode: 3,
-        children: eval(uiFilter.data.responseText)
+    $.getJSON(filepath, function(data) {
+        $("#uiFilter_tree").dynatree({
+            checkbox: true,
+            selectMode: 3,
+            children: data
+        });
     });
-    
+        
 	uiFilter.resize();
 	
     $(window).resize(uiFilter.resize);
@@ -29,7 +29,7 @@ $(document).ready(function(){
 			uiFilter.search();
 		}
 	});
-});
+}
 
 uiFilter.search = function() {
 	obj = $("#uiFilter_searchTerms");
