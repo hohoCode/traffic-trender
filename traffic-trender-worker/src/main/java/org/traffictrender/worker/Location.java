@@ -81,4 +81,9 @@ public class Location {
 		this.county = county;
 		this.location = location;		
 	}
+	
+	public Location() {
+		super();
+	}
+
 }
