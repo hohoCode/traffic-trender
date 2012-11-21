@@ -9,9 +9,9 @@ import java.util.Map;
 
 public class TreeMap {
 
-    private static String selectionClauseIF = "SELECT sum(impact_factor)/count(*) as output FROM traffic.bottlenecks where ";
-    private static String selectionClauseDuration = "SELECT sum(time_to_sec(average_duration)*occurrences)/sum(occurrences) as output FROM traffic.bottlenecks where ";
-    private static String selectionClauseLength = "SELECT sum(average_max_length*occurrences)/sum(occurrences) as output FROM traffic.bottlenecks where ";
+    private static String selectionClauseIF = "SELECT sum(impact_factor)/count(*) as output FROM ";
+    private static String selectionClauseDuration = "SELECT sum(time_to_sec(average_duration)*occurrences)/sum(occurrences) as output FROM ";
+    private static String selectionClauseLength = "SELECT sum(average_max_length*occurrences)/sum(occurrences) as output FROM ";
 
     public static Map<MeasurementType, Map<Location, Object>> generatorResults(List<Location> filter, MeasurementType first, MeasurementType second){
 	Map<MeasurementType, Map<Location, Object>> outputMap = new HashMap<MeasurementType, Map<Location, Object>>();
@@ -30,11 +30,11 @@ public class TreeMap {
 	Map<Location, Object> m1 = null;
 
 	if (threeGuy == MeasurementType.impactFactor) {
-	    m1 = dbRetriveal(filter, selectionClauseIF, db);
+	    m1 = dbRetriveal(filter, selectionClauseIF + db.getClause() + " where ", db);
 	} else if (threeGuy == MeasurementType.duration) {
-	    m1 = dbRetriveal(filter, selectionClauseLength, db);
+	    m1 = dbRetriveal(filter, selectionClauseLength + db.getClause() + " where ", db);
 	} else if (threeGuy == MeasurementType.length) {
-	    m1 = dbRetriveal(filter, selectionClauseDuration, db);
+	    m1 = dbRetriveal(filter, selectionClauseDuration + db.getClause() + " where ", db);
 	} else {
 	    System.err.println("The MeasurementType is invalid!");
 	    return null;
@@ -56,7 +56,7 @@ public class TreeMap {
 		    && filteredLocation.getState() != null 
 		    && filteredLocation.getCounty() != null ){
 		String query = selectionClause;
-		query += " (location = \'" + filteredLocation.getLocation() + "\' "
+		query += " (road_name = \'" + filteredLocation.getLocation() + "\' "
 			+ "and state = \'" + filteredLocation.getState()+"\' "
 			+ "and county = \'" + filteredLocation.getCounty()+"\') ";
 		System.err.println("SQL: " + query);
@@ -109,11 +109,11 @@ public class TreeMap {
 
     /*public static void main(String[] args) {
 	List<Location> inputFilter = new LinkedList<Location>(); //Input Argument
-	//inputFilter.add(new Location("SC", "GREENVILLE", "I-185 @ I-385/Exit 1B"));
+	inputFilter.add(new Location("SC", "GREENVILLE", "I-185"));
 	//inputFilter.add(new Location("SC", "GREENVILLE", "I-385 @ SC-49/Exit 5"));
-	inputFilter.add(new Location("SC", "GREENVILLE", null, null));
-	inputFilter.add(new Location("VA", "FAIRFAX", null, null));
-	inputFilter.add(new Location("NC", "WAKE", null, null));
+	//inputFilter.add(new Location("SC", "GREENVILLE", null));
+	//inputFilter.add(new Location("VA", "FAIRFAX", null));
+	//inputFilter.add(new Location("NC", "WAKE", null));
 	TreeMap.generatorResults(inputFilter, MeasurementType.impactFactor, MeasurementType.length);
     }*/
 }

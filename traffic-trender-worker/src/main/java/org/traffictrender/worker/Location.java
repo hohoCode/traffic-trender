@@ -2,15 +2,7 @@ package org.traffictrender.worker;
 
 
 public class Location {
-	private String state, county, location, direction;
-
-	public String getDirection() {
-		return direction;
-	}
-
-	public void setDirection(String direc) {
-		this.direction = direc;
-	}
+	private String state, county, location;
 
 	public String getState() {
 		return state;
@@ -83,11 +75,10 @@ public class Location {
 		return true;
 	}
 
-	public Location(String state, String county, String location, String direcString) {
+	public Location(String state, String county, String location) {
 		super();
 		this.state = state;
 		this.county = county;
-		this.location = location;
-		this.direction = direcString;
+		this.location = location;		
 	}
 }

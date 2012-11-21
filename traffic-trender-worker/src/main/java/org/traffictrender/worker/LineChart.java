@@ -91,9 +91,9 @@ public class LineChart {
 	    for (int j = monthStart; j <= monthEnd; j++) {
 		String query = null;
 		if (sql.contains("where")) {
-		    query = sql + " and year = "+ i + " and month = "+ j + " group by year, month, location, direction order by output desc limit 20";
+		    query = sql + " and year = "+ i + " and month = "+ j + " group by year, month, location order by output desc limit 20";
 		} else {
-		    query = sql + " where year = "+ i + " and month = "+ j + " group by year, month, location, direction order by output desc limit 20";
+		    query = sql + " where year = "+ i + " and month = "+ j + " group by year, month, location order by output desc limit 20";
 		}
 		
 		try {
@@ -141,10 +141,9 @@ public class LineChart {
 	
 	///Get all items in the filtered list
 	for (Location filteredLocation : filter) {
-	    if (filteredLocation.getLocation() == null 
+	    if (filteredLocation.getLocation() == null
 		    || filteredLocation.getState() == null 
-		    || filteredLocation.getCounty() == null 
-		    || filteredLocation.getDirection() == null){
+		    || filteredLocation.getCounty() == null ){
 		System.err.println("The values in the filter list are invalid.");
 		return null;
 	    }
@@ -154,10 +153,9 @@ public class LineChart {
 	    } else {
 		whereClause += " or ";
 	    }
-	    whereClause += " (location = \'" + filteredLocation.getLocation() + "\' "
+	    whereClause += " (road_name = \'" + filteredLocation.getLocation() + "\' "
 		    + "and state = \'" + filteredLocation.getState()+"\' "
-		    + "and county = \'" + filteredLocation.getCounty()+"\' "
-		    + "and direction = \'" + filteredLocation.getDirection()+"\') ";
+		    + "and county = \'" + filteredLocation.getCounty()+ "\') ";
 	    counter++;
 	}
 	
@@ -166,11 +164,11 @@ public class LineChart {
 	}
 	return whereClause; 
     }
-    
-    /*public static void main(String[] args) {
+    /*
+    public static void main(String[] args) {
 	List<Location> inputFilter = new LinkedList<Location>(); //Input Argument
-	//inputFilter.add(new Location("SC", "GREENVILLE", "I-185 @ I-385/Exit 1B"));
+	inputFilter.add(new Location("SC", "GREENVILLE", "I-185"));
 	//inputFilter.add(new Location("SC", "GREENVILLE", "I-385 @ SC-49/Exit 5"));
-	LineChart.generatorResults(new Location("NC", null, null, "NORTHBOUND"), inputFilter, MeasurementType.length);
+	LineChart.generatorResults(new Location("SC", null, null), inputFilter, MeasurementType.length);
     }*/
 }
