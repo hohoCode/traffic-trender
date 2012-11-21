@@ -32,9 +32,9 @@ public class TreeMap {
 	if (threeGuy == MeasurementType.impactFactor) {
 	    m1 = dbRetriveal(filter, selectionClauseIF + db.getClause() + " where ", db);
 	} else if (threeGuy == MeasurementType.duration) {
-	    m1 = dbRetriveal(filter, selectionClauseLength + db.getClause() + " where ", db);
-	} else if (threeGuy == MeasurementType.length) {
 	    m1 = dbRetriveal(filter, selectionClauseDuration + db.getClause() + " where ", db);
+	} else if (threeGuy == MeasurementType.length) {
+	    m1 = dbRetriveal(filter, selectionClauseLength + db.getClause() + " where ", db);
 	} else {
 	    System.err.println("The MeasurementType is invalid!");
 	    return null;
