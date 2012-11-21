@@ -9,9 +9,9 @@ import java.util.Map;
 
 public class TreeMap {
 
-    private static String selectionClauseIF = "SELECT sum(impact_factor)/count(*) as output FROM ";
-    private static String selectionClauseDuration = "SELECT sum(time_to_sec(average_duration)*occurrences)/sum(occurrences) as output FROM ";
-    private static String selectionClauseLength = "SELECT sum(average_max_length*occurrences)/sum(occurrences) as output FROM ";
+    private static String selectionClauseIF = "SELECT state, county, location, sum(impact_factor)/count(*) as output FROM ";
+    private static String selectionClauseDuration = "SELECT state, county, location, sum(time_to_sec(average_duration)*occurrences)/sum(occurrences) as output FROM ";
+    private static String selectionClauseLength = "SELECT state, county, location, sum(average_max_length*occurrences)/sum(occurrences) as output FROM ";
 
     public static Map<MeasurementType, Map<Location, Object>> generatorResults(List<Location> filter, MeasurementType first, MeasurementType second){
 	Map<MeasurementType, Map<Location, Object>> outputMap = new HashMap<MeasurementType, Map<Location, Object>>();
@@ -44,7 +44,7 @@ public class TreeMap {
     }
 
     private static Map<Location, Object> dbRetriveal(List<Location> filter, String selectionClause, MysqlConnect db) {
-	Map<Location, Object> m1 = new HashMap<Location, Object>();
+	Map<Location, Object> m1 = null; //new HashMap<Location, Object>();
 	if (filter == null){
 	    System.err.println("The filter list is empty");
 	    return null;
@@ -59,61 +59,67 @@ public class TreeMap {
 		query += " (road_name = \'" + filteredLocation.getLocation() + "\' "
 			+ "and state = \'" + filteredLocation.getState()+"\' "
 			+ "and county = \'" + filteredLocation.getCounty()+"\') ";
+		query += " group by location";
 		System.err.println("SQL: " + query);
-		m1.put(filteredLocation, dbWorker(query, db));		
+		m1 = dbWorker(query, db);
+		//m1.put(filteredLocation, dbWorker(query, db));
 	    } else if (filteredLocation.getLocation() == null 
 		    && filteredLocation.getState() != null 
 		    && filteredLocation.getCounty() != null ){
 		String query = selectionClause;
 		query +=  " ( state = \'" + filteredLocation.getState()+"\' "
 			+ "and county = \'" + filteredLocation.getCounty()+"\') ";
+		query += " group by location";
 		System.err.println("SQL: " + query);
-		m1.put(filteredLocation, dbWorker(query, db));
+		m1 = dbWorker(query, db);
+		//m1.put(filteredLocation, dbWorker(query, db));
 	    } else if (filteredLocation.getLocation() == null 
 		    && filteredLocation.getState() != null 
 		    && filteredLocation.getCounty() == null ){
 		String query = selectionClause;
 		query +=  " ( state = \'" + filteredLocation.getState()+"\')";
+		query += " group by location";
 		System.err.println("SQL: " + query);
-		m1.put(filteredLocation, dbWorker(query, db));
+		m1 = dbWorker(query, db);
+		//m1.put(filteredLocation, dbWorker(query, db));
 	    } else {
 		System.err.println("The values in the filter list are invalid.");
-		m1.put(filteredLocation, -1);
+		//m1.put(filteredLocation, -1);
 	    }
 	}	
 	return m1; 
     }
 
-    private static double dbWorker(String query, MysqlConnect db) {
-	double output = 0.0;
+    private static Map<Location, Object> dbWorker(String query, MysqlConnect db) {
+	Map<Location, Object> m1 = new HashMap<Location, Object>();
+	
 	try {
 	    ResultSet topTwenty = db.runSQL(query);
-	    boolean flag = true;
 	    while (topTwenty.next()) {
-		if (!flag) {
-		    System.err.println("WARNING: The returned results from DB are not expected!");
-		    break;
-		}
-		output = topTwenty.getDouble("output");
-		System.out.println("Results" + output);		
-		flag = false;
+		double output = topTwenty.getDouble("output");
+		String locaString = topTwenty.getString("location");
+		String stateString = topTwenty.getString("state");
+		String countyString = topTwenty.getString("county");
+		//System.out.println("Results: " + output+ " loca:"+locaString+ " state: "+stateString + " cou:"+countyString);		
+		m1.put(new Location(stateString, countyString, locaString), output);
 	    }
 	} catch (SQLException e) {
 	    System.err.println("Database Retrieval Failed");		    
 	    e.printStackTrace();
-	    return 0.0;
+	    return null;
 	}
 
-	return output;
+	return m1;
     }
 
     /*public static void main(String[] args) {
 	List<Location> inputFilter = new LinkedList<Location>(); //Input Argument
-	inputFilter.add(new Location("SC", "GREENVILLE", "I-185"));
+	inputFilter.add(new Location("SC", null, null));
+	//inputFilter.add(new Location("SC", "GREENVILLE", "I-185"));
 	//inputFilter.add(new Location("SC", "GREENVILLE", "I-385 @ SC-49/Exit 5"));
 	//inputFilter.add(new Location("SC", "GREENVILLE", null));
 	//inputFilter.add(new Location("VA", "FAIRFAX", null));
 	//inputFilter.add(new Location("NC", "WAKE", null));
-	TreeMap.generatorResults(inputFilter, MeasurementType.impactFactor, MeasurementType.length);
+	TreeMap.generatorResults(inputFilter, MeasurementType.impactFactor, MeasurementType.duration);
     }*/
 }
