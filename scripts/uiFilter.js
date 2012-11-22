@@ -45,12 +45,18 @@ uiFilter.apply = function() {
     root = $("#uiFilter_tree").dynatree("getRoot");
     sel = root.tree.getSelectedNodes();
     data = {}
+    arr = []
 
     for (var i in sel) {
+        if (!sel[i].data.children) {
+            var newkey = sel[i].data.key.replace(/,/g,"@");
+            arr.push("filtermenu=" + newkey);
+        }
         data[ sel[i].data.key ] = true;
     }
-    
-    console.log( data );
+    var query = arr.join("&");
+    console.log(query);
+    //console.log( data );
     
     /* update the treemap here */
 }

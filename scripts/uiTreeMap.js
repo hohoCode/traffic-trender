@@ -14,10 +14,11 @@ $(document).ready(function(){
 });
 
 uiTreeMap.apply = function() {
-	size = $("#uiTreeMap_size").val();
-	color = $("#uiTreeMap_color").val();
+	uiSize = $("#uiTreeMap_size").val();
+	uiColor = $("#uiTreeMap_color").val();
 	
-    console.log( "Size: " + size + ", Color: " + color );
-    
-    /* update the treemap here */
+    //console.log( "Size: " + size + ", Color: " + uiColor );
+
+    var newurl = "backend/sources/treemap_source_data_mod.json";
+    d3.json(newurl, runTreemap);
 }
