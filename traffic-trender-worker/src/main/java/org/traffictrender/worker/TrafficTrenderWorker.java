@@ -21,6 +21,7 @@ public class TrafficTrenderWorker extends HttpServlet{
 	public void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
 		
 		// Initialize inputs/outputs
+		response.addHeader("Access-Control-Allow-Origin", "*");
 		PrintWriter out = response.getWriter();
 		Map<String, String[]> map = request.getParameterMap();
 		
