@@ -66,7 +66,7 @@ public class TreeMap {
 				//m1.put(filteredLocation, -1);
 			}
 			query += joiner.join(state, county, roadName);
-			query += " group by location";
+			query += ") group by location";
 			if (m1 == null) {
 				m1 = dbWorker(query, db);
 			} else {
