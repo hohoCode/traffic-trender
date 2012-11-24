@@ -56,37 +56,6 @@ public class TrafficTrenderWorker extends HttpServlet{
 		out.close();
 	}
 	
-	public static Map<MeasurementType, Map<Location, Object>> dummyTreemap() {
-		Map<MeasurementType, Map<Location, Object>> result = new HashMap<MeasurementType, Map<Location, Object>>();
-		Map<Location, Object> iF = new HashMap<Location, Object>();
-		result.put(MeasurementType.impactFactor, iF);
-		return result;
-	}
-	
-	public static Map<String,Map<Integer, Map<Integer, Object>>> dummyLinechart() {
-		Map<String, Map<Integer, Map<Integer, Object>>> result = new HashMap<String, Map<Integer, Map<Integer, Object>>>();
-		Map<Integer,Map<Integer, Object>> loc1 = new HashMap<Integer, Map<Integer, Object>>();
-		result.put("Location_1", loc1);
-		Map<Integer, Object> loc1MonthMap = new HashMap<Integer, Object>();
-		
-		loc1MonthMap.put(1, Double.valueOf(40.34));
-		loc1MonthMap.put(2, Double.valueOf(80.34));
-		loc1MonthMap.put(3, Double.valueOf(60.34));
-		loc1MonthMap.put(4, Double.valueOf(180.34));
-		loc1MonthMap.put(6, Double.valueOf(100.34));
-		loc1.put(2010, loc1MonthMap);
-		
-		Map<Integer,Map<Integer, Object>> loc2 = new HashMap<Integer, Map<Integer, Object>>();
-		result.put("Location_2", loc2);
-		Map<Integer, Object> loc2MonthMap = new HashMap<Integer, Object>();
-		loc2MonthMap.put(1, Double.valueOf(10.34));
-		loc2MonthMap.put(2, Double.valueOf(15.34));
-		loc2MonthMap.put(3, Double.valueOf(12.34));
-		loc2.put(2010, loc2MonthMap);
-		
-		return result;
-	}
-	
 	public static Map<MeasurementType, Map<Location, Object>> getTreemapRequest(final Map<String, String[]> paramMap) {
 		MeasurementType size = MeasurementType.valueOf(paramMap.get("size")[0]);
 		MeasurementType color = MeasurementType.valueOf(paramMap.get("color")[0]);
