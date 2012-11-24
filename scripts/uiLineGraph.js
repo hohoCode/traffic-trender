@@ -5,13 +5,13 @@
 
 var uiLineGraph = uiLineGraph || {}; // namespace
 
-$(document).ready(function(){
+uiLineGraph.init = function(){
     $("#uiLineGraphPanel").panel({
         stackable:true
     });
     
     $("input:radio[name=uiGraphSettingGroup]").click(uiLineGraph.apply);
-});
+}
 
 uiLineGraph.apply = function() {
 	sel = $(this).val();

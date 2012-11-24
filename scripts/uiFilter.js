@@ -1,23 +1,23 @@
 // Filter UI script
 
 // Contributors:
-// Richard B. Johnson
+// Richard B. Johnson, Chris Musialek
 
 var uiFilter = uiFilter || {}; // namespace
 
-uiFilter.data = $.getJSON("backend/sources/filter_menu_data.json");
-
-$(document).ready(function(){
+uiFilter.init = function(filepath) {
     $("#uiFilterPanel").panel({
         stackable:true
     });
     
-    $("#uiFilter_tree").dynatree({
-        checkbox: true,
-        selectMode: 3,
-        children: eval(uiFilter.data.responseText)
+    $.getJSON(filepath, function(data) {
+        $("#uiFilter_tree").dynatree({
+            checkbox: true,
+            selectMode: 3,
+            children: data
+        });
     });
-    
+        
 	uiFilter.resize();
 	
     $(window).resize(uiFilter.resize);
@@ -29,7 +29,7 @@ $(document).ready(function(){
 			uiFilter.search();
 		}
 	});
-});
+}
 
 uiFilter.search = function() {
 	obj = $("#uiFilter_searchTerms");
@@ -45,12 +45,16 @@ uiFilter.apply = function() {
     root = $("#uiFilter_tree").dynatree("getRoot");
     sel = root.tree.getSelectedNodes();
     data = {}
-
     for (var i in sel) {
+        if (!sel[i].data.children) {
+            var newkey = sel[i].data.key.replace(/,/g,"@");
+            arr.push("filtermenu=" + newkey);
+        }
         data[ sel[i].data.key ] = true;
     }
-    
-    console.log( data );
+    var query = arr.join("&");
+    console.log(query);
+    //console.log( data );
     
     /* update the treemap here */
 }

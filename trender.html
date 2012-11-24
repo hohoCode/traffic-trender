@@ -1,6 +1,6 @@
 <!--
 Contributors:
-Richard B. Johnson
+Richard B. Johnson, Chris Musialek
 -->
 
 <html>
@@ -14,7 +14,9 @@ Richard B. Johnson
 	<link rel="stylesheet" type="text/css" href="controls/panel/ui.panel.css" />
 	<link rel="stylesheet" type="text/css" href="styles/uiTreeMap.css" />
 	<link rel="stylesheet" type="text/css" href="styles/uiFilter.css" />
-	<link rel="stylesheet" type="text/css" href="styles/uiLineGraph.css" />
+	<link rel="stylesheet" type="text/css" href="styles/uiLineGraph.css">
+    <link rel="stylesheet" type="text/css" href="styles/treemapStyles.css" />
+    <link rel="stylesheet" type="text/css" href="styles/linechartStyles.css" />
 
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
@@ -26,80 +28,89 @@ Richard B. Johnson
 	<script type="text/javascript" src="scripts/uiTreeMap.js"></script>
 	<script type="text/javascript" src="scripts/uiLineGraph.js"></script>
 	<script type="text/javascript" src="scripts/uiFilter.js"></script>
+    <script src="controls/d3/d3.v2.min.js"></script>
 </head>
 
 <body>
+<div id="filtermenu">
+    <!-- Tree Map Panel -->
 
-<!-- Tree Map Panel -->
+    <div id="uiTreeMapPanel">
+        <h2>Tree Map</h2>
+        <div id="uiTreeMapContent">
+            <label>Size:</label>
+            <br />
+            <select id="uiTreeMap_size">
+                <option>Impact Factor</option>
+                <option>Maximum Length</option>
+                <option>Time</option>
+            </select>
+            <br />
 
-<div id="uiTreeMapPanel">
-    <h2>Tree Map</h2>
-    <div id="uiTreeMapContent">
-        <label>Size:</label>
-        <br />
-        <select id="uiTreeMap_size">
-            <option>Impact Factor</option>
-            <option>Maximum Length</option>
-            <option>Time</option>
-        </select>
-        <br />
-	    
-        <label>Color:</label>
-        <br />
-        <select id="uiTreeMap_color">
-            <option>Impact Factor</option>
-            <option>Maximum Length</option>
-            <option>Time</option>
-        </select>
-        
-        <input id="uiTreeMap_applyButton" 
-               type="button"
-               value="Apply" />
+            <label>Color:</label>
+            <br />
+            <select id="uiTreeMap_color">
+                <option>Impact Factor</option>
+                <option>Maximum Length</option>
+                <option>Time</option>
+            </select>
+
+            <input id="uiTreeMap_applyButton"
+                   type="button"
+                   value="Apply" />
+        </div>
+    </div>
+
+    <!-- Filter Control Panel -->
+
+    <div id="uiFilterPanel">
+        <h2>Filter</h2>
+        <div id="uiFilterContent">
+            <label>Search:</label>
+            <br />
+            <input id="uiFilter_searchTerms" type="text" />
+            <br />
+
+            <div id="uiFilter_tree"></div>
+
+            <input id="uiFilter_applyButton"
+                   type="button"
+                   value="Apply" />
+        </div>
+    </div>
+
+    <!-- Line Graph Panel -->
+
+    <div id="uiLineGraphPanel">
+        <h2>Line Graph</h2>
+        <div id="uiLineGraphContent">
+            <input id="uiLineGraph_impactFactor"
+                   name="uiGraphSettingGroup"
+                   value="Impact Factor"
+                   type="radio" />
+            <label>Impact Factor</label>
+            <br />
+            <input id="uiLineGraph_maximumLength"
+                   name="uiGraphSettingGroup"
+                   value="Maximum Length"
+                   type="radio" />
+            <label>Maximum Length</label>
+            <br />
+            <input id="uiLineGraph_time"
+                   name="uiGraphSettingGroup"
+                   value="Time"
+                   type="radio" />
+            <label>Time</label>
+            <br />
+        </div>
     </div>
 </div>
-
-<!-- Filter Control Panel -->
-
-<div id="uiFilterPanel">
-    <h2>Filter</h2>
-    <div id="uiFilterContent">
-        <label>Search:</label>
-        <br />
-        <input id="uiFilter_searchTerms" type="text" />
-        <br />
-	    
-        <div id="uiFilter_tree"></div>
-        
-        <input id="uiFilter_applyButton" 
-               type="button"
-               value="Apply" />
-    </div>
+<div id="chart">
 </div>
-
-<!-- Line Graph Panel -->
-
-<div id="uiLineGraphPanel">
-    <h2>Line Graph</h2>
-    <div id="uiLineGraphContent">
-        <input id="uiLineGraph_impactFactor"
-               name="uiGraphSettingGroup"
-               value="Impact Factor"
-               type="radio" />
-        <label>Impact Factor</label>
-        <br />
-        <input id="uiLineGraph_maximumLength" 
-               name="uiGraphSettingGroup"
-               value="Maximum Length"
-               type="radio" />
-        <label>Maximum Length</label>
-        <br />
-        <input id="uiLineGraph_time" 
-               name="uiGraphSettingGroup"
-               value="Time"
-               type="radio" />
-        <label>Time</label>
-        <br />
-</div>
+<!-- treemap.js script tag must continue to load after the id=chart div -->
+<script src="scripts/treemap.js"></script>
+<div id="linechart"></div>
+<script src="scripts/linechart.js"></script>
 
 </body>
 </html>
