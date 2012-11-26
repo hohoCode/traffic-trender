@@ -3,6 +3,7 @@ package org.traffictrender.worker;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -241,7 +242,9 @@ public class TrafficTrenderWorker extends HttpServlet{
 		if (loc == null)
 			return new Location();
 		String[] arr = loc.split("@");
-		if (arr.length == 3)
+		if (arr.length == 4)
+			return new Location(arr[0], arr[1], arr[2].trim(), StringUtils.join(Arrays.asList(arr[2], arr[3]), "@"));
+		else if (arr.length == 3)
 			return new Location(arr[0], arr[1], arr[2], null);
 		else if (arr.length == 2)
 			return new Location(arr[0], arr[1], null, null);
