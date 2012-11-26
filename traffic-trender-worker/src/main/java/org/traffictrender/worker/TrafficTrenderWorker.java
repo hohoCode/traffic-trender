@@ -57,6 +57,46 @@ public class TrafficTrenderWorker extends HttpServlet{
 		out.close();
 	}
 	
+	@SuppressWarnings("unchecked")
+	public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
+		
+		// Initialize inputs/outputs
+		response.addHeader("Access-Control-Allow-Origin", "*");
+		PrintWriter out = response.getWriter();
+		Map<String, String[]> map = request.getParameterMap();
+		
+		// type
+		String type = request.getParameter("type");
+		assert(StringUtils.isNotBlank(type));
+		type = type.toLowerCase();
+		
+		// Jackson magic
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, Object> marshalledMap = null;
+		
+		if (type.equals("treemap")) {
+			
+			String size = map.get("size")[0], color = map.get("color")[0];
+			assert(StringUtils.isNotBlank(size));
+			assert(StringUtils.isNotBlank(color));
+			Map<MeasurementType, Map<Location, Object>> result = getTreemapRequest(map);
+			marshalledMap = marshallTreemapResult(result, MeasurementType.valueOf(size), MeasurementType.valueOf(color));
+			
+		} else if (type.equals("linechart")) {
+			
+			String y = map.get("y")[0];
+			assert(StringUtils.isNotBlank(y));
+			Map<String,Map<Integer, Map<Integer, Object>>> result = getLinechartRequest(map);
+			marshalledMap = marshallLinechartResult(result, MeasurementType.valueOf(y));
+			
+		}
+		
+		mapper.writeValue(out, marshalledMap);
+		
+		out.flush();
+		out.close();
+	}
+	
 	public static Map<MeasurementType, Map<Location, Object>> getTreemapRequest(final Map<String, String[]> paramMap) {
 		MeasurementType size = MeasurementType.valueOf(paramMap.get("size")[0]);
 		MeasurementType color = MeasurementType.valueOf(paramMap.get("color")[0]);
