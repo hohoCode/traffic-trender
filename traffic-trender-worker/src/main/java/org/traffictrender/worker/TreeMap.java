@@ -83,11 +83,11 @@ public class TreeMap {
 			ResultSet topTwenty = db.runSQL(query);
 			while (topTwenty.next()) {
 				double output = topTwenty.getDouble("output");
-				String locaString = topTwenty.getString("location");
+				String locaString = topTwenty.getString("road");
 				String stateString = topTwenty.getString("state");
 				String countyString = topTwenty.getString("county");
 				//System.out.println("Results: " + output+ " loca:"+locaString+ " state: "+stateString + " cou:"+countyString);		
-				m1.put(new Location(stateString, countyString, locaString), output);
+				m1.put(new Location(stateString, countyString, locaString, null), output);
 			}
 		} catch (SQLException e) {
 			System.err.println("Database Retrieval Failed");		    

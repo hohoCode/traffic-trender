@@ -62,7 +62,7 @@ public class TrafficTrenderWorker extends HttpServlet{
 		MeasurementType color = MeasurementType.valueOf(paramMap.get("color")[0]);
 		
 		List<Location> filterLocations = new ArrayList<Location>();
-		String[] locs = paramMap.get("filtermenu");
+		String[] locs = paramMap.get("fm");
 		assert(locs != null);
 		
 		for (String loc : locs) {
@@ -78,7 +78,7 @@ public class TrafficTrenderWorker extends HttpServlet{
 		Location zoomLevel = stringToLocation(paramMap.get("zoomlevel")[0]);
 		
 		List<Location> filterLocations = new ArrayList<Location>();
-		String[] locs = paramMap.get("filtermenu");
+		String[] locs = paramMap.get("fm");
 		assert(locs != null);
 		
 		for (String loc : locs) {
@@ -95,34 +95,41 @@ public class TrafficTrenderWorker extends HttpServlet{
 		
 		Map<Location, Object> sizeMap = resultMap.get(size);
 		Map<Location, Object> colorMap = resultMap.get(color);
-		Map<String, Map<String, Map<String, Map<String, Object>>>> tempResult = new HashMap<String, Map<String, Map<String, Map<String, Object>>>>();
+		Map<String, Map<String, Map<String, Map<String, Map<String, Object>>>>> tempResult = new HashMap<String, Map<String, Map<String, Map<String, Map<String, Object>>>>>();
 		
 		for (Location l : sizeMap.keySet()) {
-			Map<String, Map<String, Map<String, Object>>> stateMap = tempResult.get(l.getState());
+			Map<String, Map<String, Map<String, Map<String, Object>>>> stateMap = tempResult.get(l.getState());
 			if (stateMap == null) {
-				stateMap = new HashMap<String, Map<String, Map<String, Object>>>();
+				stateMap = new HashMap<String, Map<String, Map<String, Map<String, Object>>>>();
 				tempResult.put(l.getState(), stateMap);
 			}
 			
-			Map<String, Map<String, Object>> countyMap = stateMap.get(l.getCounty());
+			Map<String, Map<String, Map<String, Object>>> countyMap = stateMap.get(l.getCounty());
 			if (countyMap == null) {
-				countyMap = new HashMap<String, Map<String, Object>>();
+				countyMap = new HashMap<String, Map<String, Map<String, Object>>>();
 				stateMap.put(l.getCounty(), countyMap);
 			}
 			
-			Map<String, Object> locationMap = countyMap.get(l.getLocation());
+			Map<String, Map<String, Object>> roadMap = countyMap.get(l.getRoad());
+			if (roadMap == null) {
+				roadMap = new HashMap<String, Map<String, Object>>();
+				countyMap.put(l.getRoad(), roadMap);
+			}
+			
+			Map<String, Object> locationMap = roadMap.get(l.getLocation());
 			if (locationMap == null) {
 				locationMap = new HashMap<String, Object>();
-				countyMap.put(l.getLocation(), locationMap);
+				roadMap.put(l.getLocation(), locationMap);
 			}
 			
 			locationMap.put("size", sizeMap.get(l));
 		}
 		
 		for (Location l : colorMap.keySet()) {
-			Map<String, Map<String, Map<String, Object>>> stateMap = tempResult.get(l.getState());
-			Map<String, Map<String, Object>> countyMap = stateMap.get(l.getCounty());
-			Map<String, Object> locationMap = countyMap.get(l.getLocation());
+			Map<String, Map<String, Map<String, Map<String, Object>>>> stateMap = tempResult.get(l.getState());
+			Map<String, Map<String, Map<String, Object>>> countyMap = stateMap.get(l.getCounty());
+			Map<String, Map<String, Object>> roadMap = countyMap.get(l.getRoad());
+			Map<String, Object> locationMap = roadMap.get(l.getLocation());
 			
 			locationMap.put("color", colorMap.get(l));
 		}
@@ -141,14 +148,22 @@ public class TrafficTrenderWorker extends HttpServlet{
 				countiesChildren.add(countyMap);
 				
 				countyMap.put("name", county);
-				List<Map<String,Object>> locationsChildren = new ArrayList<Map<String, Object>>();
-				countyMap.put("children", locationsChildren);
-				for (String location : tempResult.get(state).get(county).keySet()) {
-					Map<String, Object> locationMap = new HashMap<String, Object>();
-					locationsChildren.add(locationMap);
-					
-					locationMap.put("name", location);
-					locationMap.putAll(tempResult.get(state).get(county).get(location));
+				List<Map<String,Object>> roadsChildren = new ArrayList<Map<String, Object>>();
+				countyMap.put("children", roadsChildren);
+				for (String road : tempResult.get(state).get(county).keySet()) {
+					Map<String, Object> roadMap = new HashMap<String, Object>();
+					roadsChildren.add(roadMap);
+			
+					roadMap.put("name", road);
+					List<Map<String,Object>> locationsChildren = new ArrayList<Map<String, Object>>();
+					roadMap.put("children", locationsChildren);
+					for (String location : tempResult.get(state).get(county).get(road).keySet()) {
+						Map<String, Object> locationMap = new HashMap<String, Object>();
+						locationsChildren.add(locationMap);
+						
+						locationMap.put("name", location);
+						locationMap.putAll(tempResult.get(state).get(county).get(road).get(location));
+					}
 				}
 			}
 		}
@@ -187,11 +202,11 @@ public class TrafficTrenderWorker extends HttpServlet{
 			return new Location();
 		String[] arr = loc.split("@");
 		if (arr.length == 3)
-			return new Location(arr[0], arr[1], arr[2]);
+			return new Location(arr[0], arr[1], arr[2], null);
 		else if (arr.length == 2)
-			return new Location(arr[0], arr[1], null);
+			return new Location(arr[0], arr[1], null, null);
 		else if (arr.length == 1)
-			return new Location(arr[0], null, null);
+			return new Location(arr[0], null, null, null);
 		else
 			return new Location();
 	}
