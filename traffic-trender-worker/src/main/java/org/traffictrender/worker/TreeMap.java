@@ -13,9 +13,9 @@ import com.google.common.base.Joiner;
 
 public class TreeMap {
 
-	private static String selectionClauseIF = "SELECT state, county, location, sum(impact_factor)/count(*) as output FROM ";
-	private static String selectionClauseDuration = "SELECT state, county, location, sum(time_to_sec(average_duration)*occurrences)/sum(occurrences) as output FROM ";
-	private static String selectionClauseLength = "SELECT state, county, location, sum(average_max_length*occurrences)/sum(occurrences) as output FROM ";
+	private static String selectionClauseIF = "SELECT state, county, road_name, location, sum(impact_factor)/count(*) as output FROM ";
+	private static String selectionClauseDuration = "SELECT state, county, road_name, location, sum(time_to_sec(average_duration)*occurrences)/sum(occurrences) as output FROM ";
+	private static String selectionClauseLength = "SELECT state, county, road_name, location, sum(average_max_length*occurrences)/sum(occurrences) as output FROM ";
 
 	public static Map<MeasurementType, Map<Location, Object>> generatorResults(List<Location> filter, MeasurementType first, MeasurementType second){
 		Map<MeasurementType, Map<Location, Object>> outputMap = new HashMap<MeasurementType, Map<Location, Object>>();
@@ -60,7 +60,7 @@ public class TreeMap {
 			Joiner joiner = Joiner.on(" and ").skipNulls();
 			String state = (filteredLocation.getState() != null ? ("state = \'" + filteredLocation.getState() + "\'"):null),
 					county = (filteredLocation.getCounty() != null ? ("county = \'" + filteredLocation.getCounty() + "\'"):null),
-					roadName = (filteredLocation.getLocation() != null ? ("road_name = \'" + filteredLocation.getLocation() + "\'"):null );
+					roadName = (filteredLocation.getRoad() != null ? ("road_name = \'" + filteredLocation.getRoad() + "\'"):null);
 			if (state == null && county == null && roadName == null){
 				System.err.println("The values in the filter list are invalid.");
 				//m1.put(filteredLocation, -1);
@@ -83,11 +83,12 @@ public class TreeMap {
 			ResultSet topTwenty = db.runSQL(query);
 			while (topTwenty.next()) {
 				double output = topTwenty.getDouble("output");
-				String locaString = topTwenty.getString("road");
+				String roadString = topTwenty.getString("road_name");
+				String locaString = topTwenty.getString("location");
 				String stateString = topTwenty.getString("state");
 				String countyString = topTwenty.getString("county");
 				//System.out.println("Results: " + output+ " loca:"+locaString+ " state: "+stateString + " cou:"+countyString);		
-				m1.put(new Location(stateString, countyString, locaString, null), output);
+				m1.put(new Location(stateString, countyString, roadString, locaString), output);
 			}
 		} catch (SQLException e) {
 			System.err.println("Database Retrieval Failed");		    
