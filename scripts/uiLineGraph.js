@@ -10,11 +10,12 @@ uiLineGraph.init = function(){
         stackable:true
     });
     
-    $("input:radio[name=uiGraphSettingGroup]").click(uiLineGraph.apply);
+    $("#uiLineGraph_applyButton").click(uiLineGraph.apply);
 }
 
 uiLineGraph.apply = function() {
-	sel = $(this).val();
+	obj = $("input:radio[name=uiGraphSettingGroup]:checked");
+	sel = obj.val();
 	
 	console.log( sel );
 	

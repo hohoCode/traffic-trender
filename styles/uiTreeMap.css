@@ -22,6 +22,9 @@ Richard B. Johnson
 {
 	background-image:none;
 	background-color:rgb(245,245,255);
+	border:0;
+	padding:0;
+	margin:0;
 }
 
 #uiTreeMapContent,
@@ -38,21 +41,17 @@ Richard B. Johnson
 	height:1.7em;
 }
 
-#uiTreeMap_size
-{
-	margin-bottom:1em;
-}
-
+#uiTreeMap_size,
 #uiTreeMap_color
 {
-	margin-bottom:0.3em;
+	margin-bottom:0.1em;
 }
 
 #uiTreeMap_applyButton
 {
 	width:100%;
-	height:2em;
-	margin-top:0.5em;
+	margin-top:0.3em;
 	text-align:center;
 	vertical-align:middle;
+	font-size:11pt;
 }
