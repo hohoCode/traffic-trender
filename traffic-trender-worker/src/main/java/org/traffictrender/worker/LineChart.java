@@ -68,13 +68,13 @@ public class LineChart {
 			String sql, MeasurementType threeGuy, MysqlConnect db) {
 		Map<String, Map<Integer, Map<Integer, Object>>> outputMap = new HashMap<String, Map<Integer, Map<Integer, Object>>>();
 
-		String top20SqlString = sql
-				+ " group by location order by output desc limit 20";
+		String top10SqlString = sql
+				+ " group by location order by output desc limit 10";
 		Set<String> locationSet = new HashSet<String>();
 
 		try {
-			System.err.println("SQL1: " + top20SqlString);
-			ResultSet topTwenty = db.runSQL(top20SqlString);
+			System.err.println("SQL1: " + top10SqlString);
+			ResultSet topTwenty = db.runSQL(top10SqlString);
 			if (topTwenty == null) {
 				System.err.println("No Results Retrieved");
 				return null;
