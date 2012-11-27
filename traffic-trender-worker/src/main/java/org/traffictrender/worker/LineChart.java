@@ -14,7 +14,7 @@ public class LineChart {
 	private static int yearEnd = 2011;
 	private static int monthStart = 1;
 	private static int monthEnd = 12;
-	private static String selectionClauseIF = "SELECT location, sum(impact_factor)/count(*) as output, month FROM ";
+	private static String selectionClauseIF = "SELECT location, sum(impact_factor)/count(*) as output, year, month FROM ";
 	private static String selectionClauseDuration = "SELECT location, sum(time_to_sec(average_duration)*occurrences)/sum(occurrences) as output, year, month FROM ";
 	private static String selectionClauseLength = "SELECT location, sum(average_max_length*occurrences)/sum(occurrences) as output, year, month FROM ";
 
