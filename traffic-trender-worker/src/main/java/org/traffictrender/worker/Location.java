@@ -106,6 +106,8 @@ public class Location {
 	}
 
 	public String getQueryString() {
+		if (this.state == null && this.county == null && this.road == null)
+			return "";
 		Joiner joiner = Joiner.on(" and ").skipNulls();
 		String state = (this.state != null ? ("state = \'" + this.state + "\'"):null),
 				county = (this.county != null ? ("county = \'" + this.county + "\'"):null),
