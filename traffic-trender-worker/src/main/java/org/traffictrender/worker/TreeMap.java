@@ -3,13 +3,8 @@ package org.traffictrender.worker;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.google.common.base.Joiner;
 
 public class TreeMap {
 
@@ -34,11 +29,11 @@ public class TreeMap {
 		Map<Location, Object> m1 = null;
 
 		if (threeGuy == MeasurementType.impactFactor) {
-			m1 = dbRetriveal(filter, selectionClauseIF + db.getClause() + " where ", db);
+			m1 = dbRetrieval(filter, selectionClauseIF + db.getClause() + " where ", db);
 		} else if (threeGuy == MeasurementType.duration) {
-			m1 = dbRetriveal(filter, selectionClauseDuration + db.getClause() + " where ", db);
+			m1 = dbRetrieval(filter, selectionClauseDuration + db.getClause() + " where ", db);
 		} else if (threeGuy == MeasurementType.length) {
-			m1 = dbRetriveal(filter, selectionClauseLength + db.getClause() + " where ", db);
+			m1 = dbRetrieval(filter, selectionClauseLength + db.getClause() + " where ", db);
 		} else {
 			System.err.println("The MeasurementType is invalid!");
 			return null;
@@ -47,26 +42,16 @@ public class TreeMap {
 		return m1;
 	}
 
-	private static Map<Location, Object> dbRetriveal(List<Location> filter, String selectionClause, MysqlConnect db) {
-		Map<Location, Object> m1 = null; //new HashMap<Location, Object>();
-		if (filter == null){
+	private static Map<Location, Object> dbRetrieval(List<Location> filter, String selectionClause, MysqlConnect db) {
+		Map<Location, Object> m1 = null;
+		if (filter == null || filter.isEmpty()){
 			System.err.println("The filter list is empty");
 			return null;
 		}
 
 		///Get all items in the filtered list
 		for (Location filteredLocation : filter) {
-			String query = selectionClause + "(";
-			Joiner joiner = Joiner.on(" and ").skipNulls();
-			String state = (filteredLocation.getState() != null ? ("state = \'" + filteredLocation.getState() + "\'"):null),
-					county = (filteredLocation.getCounty() != null ? ("county = \'" + filteredLocation.getCounty() + "\'"):null),
-					roadName = (filteredLocation.getRoad() != null ? ("road_name = \'" + filteredLocation.getRoad() + "\'"):null);
-			if (state == null && county == null && roadName == null){
-				System.err.println("The values in the filter list are invalid.");
-				//m1.put(filteredLocation, -1);
-			}
-			query += joiner.join(state, county, roadName);
-			query += ") group by location";
+			String query = selectionClause + "(" + filteredLocation.getQueryString() + ") group by location";
 			if (m1 == null) {
 				m1 = dbWorker(query, db);
 			} else {
@@ -80,13 +65,13 @@ public class TreeMap {
 		Map<Location, Object> m1 = new HashMap<Location, Object>();
 
 		try {
-			ResultSet topTwenty = db.runSQL(query);
-			while (topTwenty.next()) {
-				double output = topTwenty.getDouble("output");
-				String roadString = topTwenty.getString("road_name");
-				String locaString = topTwenty.getString("location");
-				String stateString = topTwenty.getString("state");
-				String countyString = topTwenty.getString("county");
+			ResultSet result = db.runSQL(query);
+			while (result.next()) {
+				double output = result.getDouble("output");
+				String roadString = result.getString("road_name");
+				String locaString = result.getString("location");
+				String stateString = result.getString("state");
+				String countyString = result.getString("county");
 				//System.out.println("Results: " + output+ " loca:"+locaString+ " state: "+stateString + " cou:"+countyString);		
 				m1.put(new Location(stateString, countyString, roadString, locaString), output);
 			}
@@ -99,14 +84,4 @@ public class TreeMap {
 		return m1;
 	}
 
-	/*public static void main(String[] args) {
-	List<Location> inputFilter = new LinkedList<Location>(); //Input Argument
-	inputFilter.add(new Location("SC", null, null));
-	//inputFilter.add(new Location("SC", "GREENVILLE", "I-185"));
-	//inputFilter.add(new Location("SC", "GREENVILLE", "I-385 @ SC-49/Exit 5"));
-	//inputFilter.add(new Location("SC", "GREENVILLE", null));
-	//inputFilter.add(new Location("VA", "FAIRFAX", null));
-	//inputFilter.add(new Location("NC", "WAKE", null));
-	TreeMap.generatorResults(inputFilter, MeasurementType.impactFactor, MeasurementType.duration);
-    }*/
 }
