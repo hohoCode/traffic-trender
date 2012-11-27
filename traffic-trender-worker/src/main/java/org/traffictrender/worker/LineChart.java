@@ -3,8 +3,10 @@ package org.traffictrender.worker;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class LineChart {
 
@@ -38,13 +40,13 @@ public class LineChart {
 		}
 		sqlString += db.getClause();
 
-		if (zoom.getLocation() == null 
+		if (zoom.getLocation() != null 
 				|| ((zoom.getState() == null || zoom.getCounty() == null) && zoom.getRoad() != null)
 				|| (zoom.getState() == null && zoom.getCounty() != null)) {
 			System.err.println("Input Argument: zoom level invalid!");
 			return null;
 		}
-		
+
 		String filterWhereClause = prepareFilterClause(filter);
 		if (filterWhereClause.isEmpty()) {
 			sqlString += " where ";
@@ -57,13 +59,14 @@ public class LineChart {
 		return yearMonthIteration(sqlString, threeGuy, db);
 	}
 
-	@SuppressWarnings("unchecked")
 	private static Map<String, Map<Integer, Map<Integer, Object>>> yearMonthIteration(
 			String sql, MeasurementType threeGuy, MysqlConnect db) {
 		Map<String, Map<Integer, Map<Integer, Object>>> outputMap = new HashMap<String, Map<Integer, Map<Integer, Object>>>();
 
 		String top20SqlString = sql
 				+ " group by location order by output desc limit 20";
+		Set<String> locationSet = new HashSet<String>();
+
 		try {
 			System.err.println("SQL1: " + top20SqlString);
 			ResultSet topTwenty = db.runSQL(top20SqlString);
@@ -72,74 +75,71 @@ public class LineChart {
 				return null;
 			}
 
-			HashMap<String, Integer> gapChecker = new HashMap<String, Integer>();
-			for (int i = yearStart; i <= yearEnd; i++) {
-				for (int j = monthStart; j <= monthEnd; j++) {
-					gapChecker.put(i + " " + j, 1);
-				}
+			while (topTwenty.next()) {
+				locationSet.add(topTwenty.getString("location"));
 			}
 
-			while (topTwenty.next()) {
-				HashMap<String, Integer> gapCheckerNew = (HashMap<String, Integer>) gapChecker
-						.clone();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 
-				String roadString = topTwenty.getString("location"); // /Location
-				String query = "";
-				if (!sql.contains("where")) {
-					query += sql + " where location = \'" + roadString
-							+ "\' group by year, month, location";
-				} else {
-					query += sql + " and location = \'" + roadString
-							+ "\' group by year, month, location";
+		String query = null;
+		if (threeGuy == MeasurementType.impactFactor) {
+			query = selectionClauseIF;
+		} else if (threeGuy == MeasurementType.duration) {
+			query = selectionClauseDuration;
+		} else if (threeGuy == MeasurementType.length) {
+			query = selectionClauseLength;
+		} else {
+			System.err.println("Input MeasurementType is invalid!");
+			return null;
+		}
+		query += db.getClause();
+		
+		for (String location : locationSet) {
+			Map<Integer, Map<Integer, Object>> yearMap = new HashMap<Integer, Map<Integer, Object>>();
+			outputMap.put(location, yearMap);
+			for (int i = yearStart; i <= yearEnd; i++) {
+				Map<Integer, Object> monthMap = new HashMap<Integer, Object>();
+				yearMap.put(i, monthMap);
+				for (int j = monthStart; j <= monthEnd; j++) {
+					monthMap.put(j, Double.valueOf(0));
 				}
+			}
+		}
 
-				System.err.println("SQL2: " + query);
-				ResultSet locationNumber = db.runSQL(query);
+		for (String location : locationSet) {
+			String newQuery = query;
+			newQuery += " where location = \'" + location
+					+ "\' group by year, month, location";
+
+			System.err.println("SQL2: " + newQuery);
+			try {
+				ResultSet locationNumber = db.runSQL(newQuery);
 				if (locationNumber == null) {
 					System.err.println("Not possible outcome!");
 					return null;
 				}
 
 				while (locationNumber.next()) {
-					Map<Integer, Object> m1 = new HashMap<Integer, Object>();
-					Map<Integer, Map<Integer, Object>> m2 = new HashMap<Integer, Map<Integer, Object>>();
-					int yea = locationNumber.getInt("year");
-					int monn = locationNumber.getInt("month");
-					gapCheckerNew.put(yea + " " + monn, 0);
+					int year = locationNumber.getInt("year");
+					int month = locationNumber.getInt("month");
+					Object value = null;
 					if (threeGuy == MeasurementType.length) {
-						double measureDouble = locationNumber
+						value = locationNumber
 								.getDouble("output");
-						m1.put(monn, (Object) measureDouble);
-						System.out.println("Year:" + yea + " Month:" + monn
-								+ " location:" + roadString + " " + threeGuy
-								+ ":" + measureDouble);
 					} else {
-						int measureInt = locationNumber.getInt("output");
-						m1.put(monn, (Object) measureInt);
-						System.out.println("Year:" + yea + " Month:" + monn
-								+ " location:" + roadString + " " + threeGuy
-								+ ":" + measureInt);
+						value = locationNumber.getInt("output");
 					}
-					m2.put(yea, m1);
-					outputMap.put(roadString, m2);
+					outputMap.get(location).get(year).put(month, value);
 				}
-
-				for (int i = yearStart; i <= yearEnd; i++) {
-					for (int j = monthStart; j <= monthEnd; j++) {
-						if (gapCheckerNew.get(i + " " + j) == 1) {
-							Map<Integer, Object> m1 = new HashMap<Integer, Object>();
-							Map<Integer, Map<Integer, Object>> m2 = new HashMap<Integer, Map<Integer, Object>>();
-							m1.put(j, (Object) 0);
-							m2.put(j, m1);
-							outputMap.put(roadString, m2);
-						}
-					}
-				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
+
+		} 
 
 		return outputMap;
 	}
@@ -147,7 +147,7 @@ public class LineChart {
 	private static String prepareFilterClause(List<Location> filter) {
 		// Get common clause!
 		String whereClause = "";
-		
+
 		if (filter == null || filter.isEmpty()) {
 			System.err.println("The filter list is empty");
 			return whereClause;

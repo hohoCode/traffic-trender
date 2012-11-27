@@ -11,13 +11,11 @@ uiLineGraph.init = function(){
     });
 
     //$("input:radio[name=uiGraphSettingGroup]").click(uiLineGraph.apply);
+    $("input:radio[id=uiLineGraph_impactFactor]").attr("checked", true);
     $("#uiLineGraph_applyButton").click(uiLineGraph.apply);
 }
 
-uiLineGraph.selected = "Impact Factor"; //default
-
 uiLineGraph.apply = function() {
-	//sel = $(this).val();
 	obj = $("input:radio[name=uiGraphSettingGroup]:checked");
 	sel = obj.val();
 
