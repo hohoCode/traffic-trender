@@ -65,7 +65,6 @@ public class LineChart {
 
 		String top20SqlString = sql
 				+ " group by location order by output desc limit 20";
-
 		Set<String> locationSet = new HashSet<String>();
 
 		try {
