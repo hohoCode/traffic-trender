@@ -22,7 +22,7 @@ uiLineGraph.apply = function() {
 	uiLineGraph.selected = sel;
 	var val = uiLineGraph.translate(uiLineGraph.selected);
 	
-	//console.log( val );
+	console.log( val );
 
     updateLinechart();
 	/* update line graph here */

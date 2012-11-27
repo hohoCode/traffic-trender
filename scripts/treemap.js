@@ -44,7 +44,7 @@ var buildTreemapURL = function(color, size, filters) {
 
 var runTreemap = function(root) {
 
-    console.log(root);
+    //console.log(root);
 
     var margin = {top: 20, right: 10, bottom: 0, left: 0},
         width = 1180 - 80,

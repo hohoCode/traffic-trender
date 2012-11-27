@@ -15,7 +15,7 @@ uiTreeMap.init = function() {
 
 //Translates value in ui with backend query value used
 uiTreeMap.translate = function(item) {
-    var translator = {"Impact Factor": "impactFactor", "Maximum Length": "length", "Time": "duration"};
+    var translator = {"Impact Factor": "impactFactor", "Maximum Length": "length", "Duration": "duration"};
     if (translator[item]) {
         return translator[item];
     } else {
@@ -25,7 +25,6 @@ uiTreeMap.translate = function(item) {
 
 uiTreeMap.apply = function() {
 
-    console.log("got here");
     updateTreemap();
 
     /* update the treemap here */
