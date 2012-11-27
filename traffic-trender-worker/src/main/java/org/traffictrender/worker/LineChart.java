@@ -110,12 +110,13 @@ public class LineChart {
 		}
 
 		for (String location : locationSet) {
-			query += " where location = \'" + location
+			String newQuery = query;
+			newQuery += " where location = \'" + location
 					+ "\' group by year, month, location";
 
-			System.err.println("SQL2: " + query);
+			System.err.println("SQL2: " + newQuery);
 			try {
-				ResultSet locationNumber = db.runSQL(query);
+				ResultSet locationNumber = db.runSQL(newQuery);
 				if (locationNumber == null) {
 					System.err.println("Not possible outcome!");
 					return null;
