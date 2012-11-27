@@ -45,10 +45,10 @@ Richard B. Johnson
 
 #uiFilter_applyButton
 {
-	height:2em;
 	margin-top:1em;
 	text-align:center;
 	vertical-align:middle;
+	font-size:11pt;
 }
 
 #uiFilter_tree

@@ -122,10 +122,15 @@ var runLinechart = function (trends) {
 //Set some reasonable defaults
 var defaultY = "impactFactor";
 var defaultZoom = "MD";
-var defaultFilters = "filtermenu=DC@DISTRICT OF COLUMBIA@I-395&filtermenu=DC@DISTRICT OF COLUMBIA@I-395 HOV&filtermenu=DC@DISTRICT OF COLUMBIA@I-66&filtermenu=MD@ALLEGANY@I-68&filtermenu=MD@ANNE ARUNDEL@I-195&filtermenu=MD@ANNE ARUNDEL@I-695&filtermenu=MD@ANNE ARUNDEL@I-895&filtermenu=MD@ANNE ARUNDEL@I-895 Spur&filtermenu=MD@ANNE ARUNDEL@I-97&filtermenu=MD@ANNE ARUNDEL@US-50&filtermenu=MD@BALTIMORE@I-195&filtermenu=MD@BALTIMORE@I-695&filtermenu=MD@BALTIMORE@I-70&filtermenu=MD@BALTIMORE@I-795&filtermenu=MD@BALTIMORE@I-83&filtermenu=MD@BALTIMORE@I-895&filtermenu=MD@BALTIMORE@I-95&filtermenu=MD@CARROLL@I-70&filtermenu=MD@CECIL@I-95&filtermenu=MD@DORCHESTER@US-50&filtermenu=MD@FREDERICK@I-270&filtermenu=MD@FREDERICK@I-70&filtermenu=MD@GARRETT@I-68&filtermenu=MD@HARFORD@I-95&filtermenu=MD@HOWARD@I-70&filtermenu=MD@HOWARD@I-895&filtermenu=MD@HOWARD@I-95&filtermenu=MD@MONTGOMERY@I-270&filtermenu=MD@MONTGOMERY@I-270 Spur&filtermenu=MD@MONTGOMERY@I-370&filtermenu=MD@MONTGOMERY@I-495&filtermenu=MD@TALBOT@US-50&filtermenu=MD@WASHINGTON@I-68&filtermenu=MD@WASHINGTON@I-70&filtermenu=MD@WASHINGTON@I-81&filtermenu=MD@WICOMICO@US-50&filtermenu=MD@WORCESTER@US-50&filtermenu=VA@ALEXANDRIA@I-395&filtermenu=VA@ALEXANDRIA@I-395 HOV&filtermenu=VA@ALEXANDRIA@I-495&filtermenu=VA@ARLINGTON@I-395&filtermenu=VA@ARLINGTON@I-395 HOV&filtermenu=VA@ARLINGTON@I-66&filtermenu=VA@CAROLINE@I-95&filtermenu=VA@CHESAPEAKE@I-264&filtermenu=VA@CHESAPEAKE@I-464&filtermenu=VA@CHESAPEAKE@I-64&filtermenu=VA@CHESAPEAKE@I-664&filtermenu=VA@CHESTERFIELD@I-295&filtermenu=VA@CHESTERFIELD@I-95&filtermenu=VA@COLONIAL HEIGHTS@I-95&filtermenu=VA@EMPORIA@I-95&filtermenu=VA@FAIRFAX@I-395&filtermenu=VA@FAIRFAX@I-395 HOV&filtermenu=VA@FAIRFAX@I-495&filtermenu=VA@FAIRFAX@I-66&filtermenu=VA@FAIRFAX@I-95&filtermenu=VA@FAIRFAX@I-95 HOV&filtermenu=VA@FREDERICKSBURG@I-95&filtermenu=VA@GOOCHLAND@I-64&filtermenu=VA@GREENSVILLE@I-95&filtermenu=VA@HAMPTON@I-64&filtermenu=VA@HAMPTON@I-664&filtermenu=VA@HANOVER@I-295&filtermenu=VA@HANOVER@I-95&filtermenu=VA@HENRICO@I-295&filtermenu=VA@HENRICO@I-64&filtermenu=VA@HENRICO@I-95&filtermenu=VA@HOPEWELL@I-295&filtermenu=VA@JAMES CITY@I-64&filtermenu=VA@MECKLENBURG@I-85&filtermenu=VA@NEW KENT@I-64&filtermenu=VA@NEWPORT NEWS@I-64&filtermenu=VA@NEWPORT NEWS@I-664&filtermenu=VA@NORFOLK@I-264&filtermenu=VA@NORFOLK@I-464&filtermenu=VA@NORFOLK@I-564&filtermenu=VA@NORFOLK@I-64&filtermenu=VA@PETERSBURG@I-95&filtermenu=VA@PORTSMOUTH@I-264&filtermenu=VA@PRINCE GEORGE@I-295&filtermenu=VA@PRINCE GEORGE@I-95&filtermenu=VA@PRINCE WILLIAM@I-66&filtermenu=VA@PRINCE WILLIAM@I-95&filtermenu=VA@PRINCE WILLIAM@I-95 HOV&filtermenu=VA@RICHMOND@I-195&filtermenu=VA@RICHMOND@I-64&filtermenu=VA@RICHMOND@I-95&filtermenu=VA@SPOTSYLVANIA@I-95&filtermenu=VA@STAFFORD@I-95&filtermenu=VA@SUFFOLK@I-664&filtermenu=VA@SUSSEX@I-95&filtermenu=VA@VIRGINIA BEACH@I-264&filtermenu=VA@VIRGINIA BEACH@I-64&filtermenu=VA@YORK@I-64";
+var defaultFilters = "fm=DC@DISTRICT OF COLUMBIA@I-395&fm=DC@DISTRICT OF COLUMBIA@I-395 HOV&fm=DC@DISTRICT OF COLUMBIA@I-66&fm=MD@ALLEGANY@I-68&fm=MD@ANNE ARUNDEL@I-195&fm=MD@ANNE ARUNDEL@I-695&fm=MD@ANNE ARUNDEL@I-895&fm=MD@ANNE ARUNDEL@I-895 Spur&fm=MD@ANNE ARUNDEL@I-97&fm=MD@ANNE ARUNDEL@US-50&fm=MD@BALTIMORE@I-195&fm=MD@BALTIMORE@I-695&fm=MD@BALTIMORE@I-70&fm=MD@BALTIMORE@I-795&fm=MD@BALTIMORE@I-83&fm=MD@BALTIMORE@I-895&fm=MD@BALTIMORE@I-95&fm=MD@CARROLL@I-70&fm=MD@CECIL@I-95&fm=MD@DORCHESTER@US-50&fm=MD@FREDERICK@I-270&fm=MD@FREDERICK@I-70&fm=MD@GARRETT@I-68&fm=MD@HARFORD@I-95&fm=MD@HOWARD@I-70&fm=MD@HOWARD@I-895&fm=MD@HOWARD@I-95&fm=MD@MONTGOMERY@I-270&fm=MD@MONTGOMERY@I-270 Spur&fm=MD@MONTGOMERY@I-370&fm=MD@MONTGOMERY@I-495&fm=MD@TALBOT@US-50&fm=MD@WASHINGTON@I-68&fm=MD@WASHINGTON@I-70&fm=MD@WASHINGTON@I-81&fm=MD@WICOMICO@US-50&fm=MD@WORCESTER@US-50&fm=VA@ALEXANDRIA@I-395&fm=VA@ALEXANDRIA@I-395 HOV&fm=VA@ALEXANDRIA@I-495&fm=VA@ARLINGTON@I-395&fm=VA@ARLINGTON@I-395 HOV&fm=VA@ARLINGTON@I-66&fm=VA@CAROLINE@I-95&fm=VA@CHESAPEAKE@I-264&fm=VA@CHESAPEAKE@I-464&fm=VA@CHESAPEAKE@I-64&fm=VA@CHESAPEAKE@I-664&fm=VA@CHESTERFIELD@I-295&fm=VA@CHESTERFIELD@I-95&fm=VA@COLONIAL HEIGHTS@I-95&fm=VA@EMPORIA@I-95&fm=VA@FAIRFAX@I-395&fm=VA@FAIRFAX@I-395 HOV&fm=VA@FAIRFAX@I-495&fm=VA@FAIRFAX@I-66&fm=VA@FAIRFAX@I-95&fm=VA@FAIRFAX@I-95 HOV&fm=VA@FREDERICKSBURG@I-95&fm=VA@GOOCHLAND@I-64&fm=VA@GREENSVILLE@I-95&fm=VA@HAMPTON@I-64&fm=VA@HAMPTON@I-664&fm=VA@HANOVER@I-295&fm=VA@HANOVER@I-95&fm=VA@HENRICO@I-295&fm=VA@HENRICO@I-64&fm=VA@HENRICO@I-95&fm=VA@HOPEWELL@I-295&fm=VA@JAMES CITY@I-64&fm=VA@MECKLENBURG@I-85&fm=VA@NEW KENT@I-64&fm=VA@NEWPORT NEWS@I-64&fm=VA@NEWPORT NEWS@I-664&fm=VA@NORFOLK@I-264&fm=VA@NORFOLK@I-464&fm=VA@NORFOLK@I-564&fm=VA@NORFOLK@I-64&fm=VA@PETERSBURG@I-95&fm=VA@PORTSMOUTH@I-264&fm=VA@PRINCE GEORGE@I-295&fm=VA@PRINCE GEORGE@I-95&fm=VA@PRINCE WILLIAM@I-66&fm=VA@PRINCE WILLIAM@I-95&fm=VA@PRINCE WILLIAM@I-95 HOV&fm=VA@RICHMOND@I-195&fm=VA@RICHMOND@I-64&fm=VA@RICHMOND@I-95&fm=VA@SPOTSYLVANIA@I-95&fm=VA@STAFFORD@I-95&fm=VA@SUFFOLK@I-664&fm=VA@SUSSEX@I-95&fm=VA@VIRGINIA BEACH@I-264&fm=VA@VIRGINIA BEACH@I-64&fm=VA@YORK@I-64";
 var defaulturl = backendurl + "/traffic-trender/worker?type=linechart&y=" + defaultY + "&zoomlevel=" + defaultZoom + "&" + defaultFilters;
 
-d3.json(defaulturl, runLinechart);
+//d3.json(defaulturl, runLinechart);
+$.ajax({
+    url: url,
+    type: 'POST',
+    success: runLinechart
+});
 
 
 /*
@@ -145,6 +150,11 @@ var updateLinechart = function() {
     var url = backendurl + "/traffic-trender/worker?type=linechart&y=" + yvalue + "&zoomlevel=" + curzoom + "&" + filtermenu;
 
     $("#linechart svg").remove();
-    d3.json(url, runLinechart);
+    //d3.json(url, runLinechart);
+    $.ajax({
+        url: url,
+        type: 'POST',
+        success: runLinechart
+    });
 
 }

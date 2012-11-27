@@ -54,6 +54,7 @@ uiFilter.getFilterSelections = function(zoomlevel) {
     sel = root.tree.getSelectedNodes();
     //var data = {};
     var arr = [];
+    
     for (var i in sel) {
         if (!sel[i].data.children) {
             var newkey = sel[i].data.key.replace(/,/g,"@");
@@ -66,6 +67,8 @@ uiFilter.getFilterSelections = function(zoomlevel) {
     var query = arr.join("&");
     console.log(query);
     return query;
+    
+    /* update the treemap here */
 }
 
 uiFilter.resize = function() {

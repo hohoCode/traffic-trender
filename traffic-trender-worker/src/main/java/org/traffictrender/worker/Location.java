@@ -2,7 +2,7 @@ package org.traffictrender.worker;
 
 
 public class Location {
-	private String state, county, location;
+	private String state, county, road, location;
 
 	public String getState() {
 		return state;
@@ -20,6 +20,14 @@ public class Location {
 		this.county = county;
 	}
 
+	public String getRoad() {
+		return road;
+	}
+
+	public void setRoad(String road) {
+		this.road = road;
+	}
+
 	public String getLocation() {
 		return location;
 	}
@@ -35,6 +43,7 @@ public class Location {
 		result = prime * result + ((county == null) ? 0 : county.hashCode());
 		result = prime * result
 				+ ((location == null) ? 0 : location.hashCode());
+		result = prime * result + ((road == null) ? 0 : road.hashCode());
 		result = prime * result + ((state == null) ? 0 : state.hashCode());
 		return result;
 	}
@@ -65,6 +74,13 @@ public class Location {
 		} else if (!location.equals(other.location)) {
 			return false;
 		}
+		if (road == null) {
+			if (other.road != null) {
+				return false;
+			}
+		} else if (!road.equals(other.road)) {
+			return false;
+		}
 		if (state == null) {
 			if (other.state != null) {
 				return false;
@@ -75,10 +91,11 @@ public class Location {
 		return true;
 	}
 
-	public Location(String state, String county, String location) {
+	public Location(String state, String county, String road, String location) {
 		super();
 		this.state = state;
 		this.county = county;
+		this.road = road;
 		this.location = location;		
 	}
 	

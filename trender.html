@@ -1,6 +1,7 @@
 <!--
 Contributors:
-Richard B. Johnson, Chris Musialek
+Richard B. Johnson, 
+Chris Musialek
 -->
 
 <html>
@@ -9,20 +10,20 @@ Richard B. Johnson, Chris Musialek
     
     <title>Traffic Trender</title>
 	
-    <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="controls/jquery/ui/css/smoothness/jquery-ui-1.9.1.custom.css" />
 	<link rel="stylesheet" type="text/css" href="controls/dynatree/src/skin/ui.dynatree.css" />
 	<link rel="stylesheet" type="text/css" href="controls/panel/ui.panel.css" />
 	<link rel="stylesheet" type="text/css" href="styles/uiTreeMap.css" />
 	<link rel="stylesheet" type="text/css" href="styles/uiFilter.css" />
-	<link rel="stylesheet" type="text/css" href="styles/uiLineGraph.css">
+	<link rel="stylesheet" type="text/css" href="styles/uiLineGraph.css" />
     <link rel="stylesheet" type="text/css" href="styles/treemapStyles.css" />
     <link rel="stylesheet" type="text/css" href="styles/linechartStyles.css" />
 
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.js"></script>
-    <script type="text/javascript" src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
+    <script type="text/javascript" src="controls/jquery/ui/js/jquery-1.8.2.js"></script>
+    <script type="text/javascript" src="controls/jquery/ui/js/jquery-ui-1.9.1.custom.js"></script>    
 	<script src="controls/dynatree/src/jquery.dynatree.js" type="text/javascript"></script>		
 	<script type="text/javascript" src="controls/panel/ui.panel.js"></script>
-	<script type="text/javascript" src="controls/d3/d3.v2.js"></script>
+	<!--script type="text/javascript" src="controls/d3/d3.v2.js"></script-->
 	<script type="text/javascript" src="controls/d3/d3.v2.min.js"></script>
     <script type="text/javascript" src="scripts/globals.js"></script>
 	<script type="text/javascript" src="scripts/uiInitialize.js"></script>
@@ -30,7 +31,7 @@ Richard B. Johnson, Chris Musialek
 	<script type="text/javascript" src="scripts/uiTreeMap.js"></script>
 	<script type="text/javascript" src="scripts/uiLineGraph.js"></script>
 	<script type="text/javascript" src="scripts/uiFilter.js"></script>
-    <script src="controls/d3/d3.v2.min.js"></script>
+	<script type="text/javascript" src="scripts/uiInitialize.js"></script>
 </head>
 
 <body>
@@ -39,28 +40,42 @@ Richard B. Johnson, Chris Musialek
 
     <div id="uiTreeMapPanel">
         <h2>Tree Map</h2>
+        
         <div id="uiTreeMapContent">
-            <label>Size:</label>
-            <br />
-            <select id="uiTreeMap_size">
-                <option>Impact Factor</option>
-                <option>Maximum Length</option>
-                <option>Time</option>
-            </select>
-            <br />
-
-            <label>Color:</label>
-            <br />
-            <select id="uiTreeMap_color">
-                <option>Impact Factor</option>
-                <option>Maximum Length</option>
-                <option>Time</option>
-            </select>
-
-            <input id="uiTreeMap_applyButton"
-                   type="button"
-                   value="Apply" />
-        </div>
+			<table border="0" width="100%" style="padding:0; margin:0;">
+			<tr>
+				<td>
+					<label>Size:</label>
+				</td>
+				<td>
+					<select id="uiTreeMap_size">
+						<option>Impact Factor</option>
+						<option>Maximum Length</option>
+						<option>Time</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Color:</label>
+				</td>
+				<td>
+					<select id="uiTreeMap_color">
+						<option>Impact Factor</option>
+						<option>Maximum Length</option>
+						<option>Time</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<input id="uiTreeMap_applyButton"
+						   type="button"
+						   value="Apply" />
+				</td>
+			</tr>
+			</table>
+		</div>
     </div>
 
     <!-- Filter Control Panel -->
@@ -103,6 +118,12 @@ Richard B. Johnson, Chris Musialek
                    value="Time"
                    type="radio" />
             <label>Time</label>
+            
+            <br>
+            
+            <input id="uiLineGraph_applyButton"
+                   type="button"
+                   value="Apply" />
             <br />
         </div>
     </div>
@@ -112,6 +133,7 @@ Richard B. Johnson, Chris Musialek
 
 <div id="chart">
 </div>
+
 <!-- treemap.js script tag must continue to load after the id=chart div -->
 <script src="scripts/treemap.js"></script>
 
