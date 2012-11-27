@@ -10,25 +10,20 @@ uiLineGraph.init = function(){
         stackable:true
     });
 
-    $("input:radio[name=uiGraphSettingGroup]").click(uiLineGraph.apply);
+    $("input:radio[id=uiLineGraph_impactFactor]").attr("checked", true);
     $("#uiLineGraph_applyButton").click(uiLineGraph.apply);
 }
 
-uiLineGraph.selected = "Impact Factor"; //default
-
 uiLineGraph.apply = function() {
-	sel = $(this).val();
-	//obj = $("input:radio[name=uiGraphSettingGroup]:checked");
-	//sel = obj.val();
+	obj = $("input:radio[name=uiGraphSettingGroup]:checked");
+	sel = obj.val();
 
-	uiLineGraph.selected = sel;
-	var val = uiLineGraph.translate(uiLineGraph.selected);
-	
-	console.log( val );
+	console.log( sel );
 	
 	/* update line graph here */
 }
 
+/* (DELETE: NO LONGER NEEDED)
 //Translates value in ui with backend query value used
 uiLineGraph.translate = function(item) {
     var translator = {"Impact Factor": "impactFactor", "Maximum Length": "length", "Time": "duration"};
@@ -38,3 +33,4 @@ uiLineGraph.translate = function(item) {
         return item;
     }
 }
+*/
