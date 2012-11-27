@@ -191,11 +191,11 @@ public class TrafficTrenderWorker extends HttpServlet{
 			for (Integer year : resultMap.get(l).keySet())
 				for (Integer month : resultMap.get(l).get(year).keySet()) {
 					Map<String, Object> entry = new HashMap<String, Object>();
+					locBottlenecks.add(entry);
 					Object value = resultMap.get(l).get(year).get(month);
-					String date = String.format("%4d-%02d", year, month);
+					String date = String.format("%04d-%02d", year, month);
 					entry.put("date", date);
 					entry.put("value", value);
-					locBottlenecks.add(entry);
 				}
 		}
 		
