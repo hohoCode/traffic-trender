@@ -15,6 +15,8 @@ uiLineGraph.init = function(){
     $("#uiLineGraph_applyButton").click(uiLineGraph.apply);
 }
 
+uiLineGraph.selected = "Impact Factor"; //default
+
 uiLineGraph.apply = function() {
 	obj = $("input:radio[name=uiGraphSettingGroup]:checked");
 	sel = obj.val();
