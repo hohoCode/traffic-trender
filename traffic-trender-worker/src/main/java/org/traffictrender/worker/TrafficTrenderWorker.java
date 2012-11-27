@@ -203,7 +203,7 @@ public class TrafficTrenderWorker extends HttpServlet{
 	}
 	
 	public static Location stringToLocation(final String loc) {
-		if (loc == null)
+		if (loc == null || loc.isEmpty() || loc.toLowerCase().equals("states"))
 			return new Location();
 		String[] arr = loc.split("@");
 		if (arr.length == 4)
