@@ -1,5 +1,7 @@
 package org.traffictrender.worker;
 
+import com.google.common.base.Joiner;
+
 
 public class Location {
 	private String state, county, road, location;
@@ -103,4 +105,14 @@ public class Location {
 		super();
 	}
 
+	public String getQueryString() {
+		Joiner joiner = Joiner.on(" and ").skipNulls();
+		String state = (this.state != null ? ("state = \'" + this.state + "\'"):null),
+				county = (this.county != null ? ("county = \'" + this.county + "\'"):null),
+				roadName = (this.getRoad() != null ? ("road_name = \'" + this.getRoad() + "\'"):null);
+		if (state == null && county == null && roadName == null){
+			System.err.println("The values in the filter list are invalid.");
+		}
+		return joiner.join(state, county, roadName);
+	}
 }
