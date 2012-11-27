@@ -38,7 +38,7 @@ public class LineChart {
 		}
 		sqlString += db.getClause();
 
-		if (zoom.getLocation() == null 
+		if (zoom.getLocation() != null 
 				|| ((zoom.getState() == null || zoom.getCounty() == null) && zoom.getRoad() != null)
 				|| (zoom.getState() == null && zoom.getCounty() != null)) {
 			System.err.println("Input Argument: zoom level invalid!");
