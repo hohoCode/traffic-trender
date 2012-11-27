@@ -24,6 +24,8 @@ Richard B. Johnson, Chris Musialek
 	<script type="text/javascript" src="controls/panel/ui.panel.js"></script>
 	<script type="text/javascript" src="controls/d3/d3.v2.js"></script>
 	<script type="text/javascript" src="controls/d3/d3.v2.min.js"></script>
+    <script type="text/javascript" src="scripts/globals.js"></script>
+	<script type="text/javascript" src="scripts/uiInitialize.js"></script>
 	<script type="text/javascript" src="scripts/uiUtility.js"></script>
 	<script type="text/javascript" src="scripts/uiTreeMap.js"></script>
 	<script type="text/javascript" src="scripts/uiLineGraph.js"></script>
@@ -105,11 +107,20 @@ Richard B. Johnson, Chris Musialek
         </div>
     </div>
 </div>
+
+<!-- Treemap -->
+
 <div id="chart">
 </div>
 <!-- treemap.js script tag must continue to load after the id=chart div -->
 <script src="scripts/treemap.js"></script>
-<div id="linechart"></div>
+
+
+<!-- Linechart -->
+
+<div id="linechart">
+    <h3>Top 20 Locations</h3>
+</div>
 <script src="scripts/linechart.js"></script>
 
 </body>

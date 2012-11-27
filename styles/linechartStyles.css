@@ -1,0 +1,25 @@
+#linechart {
+    position:absolute;
+    top:0;
+    left:270px;
+    top:620px;
+    /*margin: 40px auto auto;*/
+}
+
+.axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}
+
+.dot {
+    fill: white;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}

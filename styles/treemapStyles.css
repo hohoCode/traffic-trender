@@ -1,0 +1,51 @@
+/* Styles for the treemap */
+
+@import url(style.css);
+
+#chart {
+    width: 1200px;
+    height: 620px;
+    background: #bbb;
+    position:absolute;
+    top:0;
+    left:270;
+    /*margin: 40px auto auto;*/
+}
+
+text {
+    pointer-events: none;
+    font-weight: bold;
+}
+
+.grandparent text {
+    font-weight: bold;
+}
+
+rect {
+    fill: none;
+    stroke: #fff;
+}
+
+rect.parent,
+.grandparent rect {
+    stroke-width: 2px;
+}
+
+.grandparent rect {
+    fill: #fff;
+}
+
+.states rect.parent,
+.grandparent rect {
+    cursor: pointer;
+}
+
+rect.parent {
+    pointer-events: all;
+}
+
+.states:hover rect,
+.grandparent:hover rect {
+    fill: #aaa;
+    fill-opacity: .3;
+}
