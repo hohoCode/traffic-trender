@@ -47,13 +47,18 @@ public class LineChart {
 			return null;
 		}
 
+		String zoomFilter = zoom.getQueryString();
+
 		String filterWhereClause = prepareFilterClause(filter);
-		if (filterWhereClause.isEmpty()) {
-			sqlString += " where ";
-		} else {
-			sqlString += filterWhereClause + " and ";
+		if (zoomFilter != null && !zoomFilter.isEmpty()) {
+			if (filterWhereClause.isEmpty()) {
+				sqlString += " where ";
+			} else {
+				sqlString += filterWhereClause + " and ";
+			}
+			sqlString += zoomFilter;
 		}
-		sqlString += zoom.getQueryString();
+
 
 		// Run SQL
 		return yearMonthIteration(sqlString, threeGuy, db);
@@ -96,7 +101,7 @@ public class LineChart {
 			return null;
 		}
 		query += db.getClause();
-		
+
 		for (String location : locationSet) {
 			Map<Integer, Map<Integer, Object>> yearMap = new HashMap<Integer, Map<Integer, Object>>();
 			outputMap.put(location, yearMap);
