@@ -9,8 +9,8 @@ uiTreeMap.init = function() {
     $("#uiTreeMapPanel").panel({
         stackable:true
     });
-    
-    $("#uiTreeMap_applyButton").click(uiTreeMap.apply);    
+
+    $("#uiTreeMap_applyButton").click(uiTreeMap.apply);
 }
 
 //Translates value in ui with backend query value used
@@ -25,6 +25,7 @@ uiTreeMap.translate = function(item) {
 
 uiTreeMap.apply = function() {
 
+    console.log("got here");
     updateTreemap();
 
     /* update the treemap here */
