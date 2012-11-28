@@ -1,11 +1,3 @@
-#linechart {
-    position:absolute;
-    top:0;
-    left:270px;
-    top:520px;
-    /*margin: 40px auto auto;*/
-}
-
 .axis path, .axis line {
     fill: none;
     stroke: #000;

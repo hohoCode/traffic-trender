@@ -203,7 +203,8 @@ var runTreemap = function(root) {
                 t2 = g2.transition().duration(750);
 
             //Update linechart
-            updateLinechart(); //in uiLineGraph.js
+            updateLinechart(); //in linechart.js
+            updateLinechartAgg(); //in linechart-aggregated.js
 
             // Update the domain only after entering new elements.
             x.domain([d.x, d.x + d.dx]);

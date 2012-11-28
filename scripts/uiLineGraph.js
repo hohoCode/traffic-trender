@@ -27,6 +27,7 @@ uiLineGraph.apply = function() {
 	console.log( val );
 
     updateLinechart();
+    updateLinechartAgg();
 	/* update line graph here */
 }
 

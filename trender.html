@@ -128,6 +128,7 @@ Chris Musialek
     </div>
 </div>
 
+<div id="visualizations"> <!--container-->
 <!-- Treemap -->
 
 <div id="chart">
@@ -138,11 +139,19 @@ Chris Musialek
 
 
 <!-- Linechart -->
-
-<div id="linechart">
-    <h3>Top 10 Locations</h3>
+<div id="tabs">
+    <ul>
+        <li><a href="#linechart">Top 10 Locations</a></li>
+        <li><a href="#linechart-aggregate">Aggregated Boundaries</a></li>
+    </ul>
+    <div id="linechart">
+    </div>
+    <div id="linechart-aggregate">
+        </div>
 </div>
 <script src="scripts/linechart.js"></script>
+<script src="scripts/linechart-aggregated.js"></script>
 
+</div>
 </body>
 </html>

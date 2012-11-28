@@ -6,15 +6,36 @@
     width: 1100px;
     height: 520px;
     background: #bbb;
-    position:absolute;
-    top:0;
-    left:270;
     /*margin: 40px auto auto;*/
 }
 
-text {
+#tabs {
+    position:absolute;
+    top: 525px;
+    width: 1100px;
+}
+
+#visualizations {
+    position:absolute;
+    top:0;
+    left:270;
+}
+
+#chart text {
     pointer-events: none;
     font-weight: bold;
+}
+
+#linechart text {
+    pointer-events: none;
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+#linechart-aggregate text {
+    pointer-events: none;
+    font-weight: bold;
+    font-size: 0.8em;
 }
 
 .grandparent text {

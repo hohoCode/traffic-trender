@@ -65,7 +65,6 @@ uiFilter.getFilterSelections = function(zoomlevel) {
     //TODO: Currently restricted to 50 items until HTTP 413 error is resolved
     //var query = arr.slice(0,50).join("&");
     var query = arr.join("&");
-    console.log(query);
     return query;
     
     /* update the treemap here */
