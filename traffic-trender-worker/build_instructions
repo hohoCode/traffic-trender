@@ -1,4 +1,2 @@
 run:
-mvn clean install
-
-mvn -Djetty.port=8080 jetty:run
+mvn clean install tomcat:redeploy
