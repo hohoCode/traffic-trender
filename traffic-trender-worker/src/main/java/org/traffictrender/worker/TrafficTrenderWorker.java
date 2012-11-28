@@ -81,6 +81,10 @@ public class TrafficTrenderWorker extends HttpServlet{
 	public static Map<String,Map<Integer, Map<Integer, Object>>> getLinechartRequest(final Map<String, String[]> paramMap) {
 		MeasurementType y = MeasurementType.valueOf(paramMap.get("y")[0]);
 		Location zoomLevel = stringToLocation(paramMap.get("zoomlevel")[0]);
+		boolean aggregated = false; 
+		String[] aggre = paramMap.get("aggregated");
+		if (aggre != null && aggre.length > 0 && aggre[0].toLowerCase().equals("true"))
+			aggregated = true;
 		
 		List<Location> filterLocations = new ArrayList<Location>();
 		String[] locs = paramMap.get("fm");
@@ -90,7 +94,7 @@ public class TrafficTrenderWorker extends HttpServlet{
 			filterLocations.add(stringToLocation(loc));
 		}
 
-		return LineChart.generatorResults(zoomLevel, filterLocations, y);
+		return LineChart.generatorResults(zoomLevel, filterLocations, y, aggregated);
 	}
 	
 	// TODO get rid of twice mapping

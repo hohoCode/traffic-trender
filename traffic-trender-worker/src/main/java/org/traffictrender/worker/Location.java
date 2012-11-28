@@ -117,4 +117,17 @@ public class Location {
 		}
 		return joiner.join(state, county, roadName);
 	}
+	
+	public String getNextLevel() {
+		if (this.state == null)
+			return "state";
+		else if (this.county == null)
+			return "county";
+		else if (this.road == null)
+			return "road_name";
+		else if (this.location == null)
+			return "location";
+		else
+			return null;
+	}
 }
