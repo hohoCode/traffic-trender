@@ -34,7 +34,7 @@ public class LineChart {
 			return null;
 		}
 		String sqlString = null;
-		
+
 		if (threeGuy == MeasurementType.impactFactor) {
 			sqlString = selectionClauseIF;
 		} else if (threeGuy == MeasurementType.duration) {
@@ -45,7 +45,7 @@ public class LineChart {
 			System.err.println("Input MeasurementType is invalid!");
 			return null;
 		}
-		
+
 		sqlString += db.getClause();
 
 		String zoomFilter = zoom.getQueryString();
@@ -71,8 +71,8 @@ public class LineChart {
 		String top10SqlString = sql
 				+ " group by target order by output desc limit 10";
 
-			top10SqlString = top10SqlString.replaceAll("target", aggregated?zoom.getNextLevel():"location");
-		
+		top10SqlString = top10SqlString.replaceAll("target", aggregated?zoom.getNextLevel():"location");
+
 		Set<String> targetSet = new HashSet<String>();
 
 		try {
@@ -121,7 +121,7 @@ public class LineChart {
 			String newQuery = query;
 			newQuery += " where target = \'" + target
 					+ "\' group by year, month, target";
-			
+
 			if (aggregated)
 				newQuery = newQuery.replaceAll("target", aggregated?zoom.getNextLevel() : "location");
 
