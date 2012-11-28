@@ -18,6 +18,21 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 @SuppressWarnings("serial")
 public class TrafficTrenderWorker extends HttpServlet{
+
+	private static Map<ServletCacheKey, Map<String, Object>> treemapCache;
+	private static Map<ServletCacheKey, Map<String, Object>> linechartCache;
+	/*
+	private static Map<ServletCacheKey, Map<String, Object>> detailCache;
+	 */
+
+	static {
+		treemapCache = new HashMap<ServletCacheKey, Map<String, Object>>();
+		linechartCache = new HashMap<ServletCacheKey, Map<String, Object>>();
+		/*
+		detailCache = new HashMap<ServletCacheKey, Map<String, Object>>();
+		 */
+	}
+
 	@SuppressWarnings("unchecked")
 	public void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
 
@@ -36,29 +51,42 @@ public class TrafficTrenderWorker extends HttpServlet{
 		ObjectMapper mapper = new ObjectMapper();
 		Map<String, Object> marshalledMap = null;
 
+		ServletCacheKey key = new ServletCacheKey(map);
+
 		if (type.equals("treemap")) {
 
-			String size = map.get("size")[0], color = map.get("color")[0];
-			if (StringUtils.isBlank(size))
-				throw new ServletException("size must be specified for treemap");
-			if (StringUtils.isBlank(color))
-				throw new ServletException("color must be specified for treemap");
-			Map<MeasurementType, Map<Location, Object>> result = getTreemapRequest(map);
-			marshalledMap = marshallTreemapResult(result, MeasurementType.valueOf(size), MeasurementType.valueOf(color));
-
+			if (treemapCache.containsKey(key)) {
+				marshalledMap = treemapCache.get(key);
+			} else {
+				String size = map.get("size")[0], color = map.get("color")[0];
+				if (StringUtils.isBlank(size))
+					throw new ServletException("size must be specified for treemap");
+				if (StringUtils.isBlank(color))
+					throw new ServletException("color must be specified for treemap");
+				Map<MeasurementType, Map<Location, Object>> result = getTreemapRequest(map);
+				marshalledMap = marshallTreemapResult(result, MeasurementType.valueOf(size), MeasurementType.valueOf(color));
+				if (marshalledMap != null && marshalledMap.isEmpty())
+					treemapCache.put(key, marshalledMap);
+			}
 		} else if (type.equals("linechart")) {
 
-			String y = map.get("y")[0];
-			if (StringUtils.isBlank(y))
-				throw new ServletException("y must be specified for linechart");
-			Map<String,Map<Integer, Map<Integer, Object>>> result = getLinechartRequest(map);
-			marshalledMap = marshallLinechartResult(result, MeasurementType.valueOf(y));
+			if (linechartCache.containsKey(key)) {
+				marshalledMap = linechartCache.get(key);
+			} else {
+				String y = map.get("y")[0];
+				if (StringUtils.isBlank(y))
+					throw new ServletException("y must be specified for linechart");
+				Map<String,Map<Integer, Map<Integer, Object>>> result = getLinechartRequest(map);
+				marshalledMap = marshallLinechartResult(result, MeasurementType.valueOf(y));
+				if (marshalledMap != null && marshalledMap.isEmpty())
+					linechartCache.put(key, marshalledMap);
+			}
+		} /* else if (type.equals("detail")) {
+			// TODO adding cache
+			Map<Location, Map<String, Object>> result = getDetailsRequest(map);
+			marshalledMap = marshallDetailsResult(result);
 
-		} else if (type.equals("detail")) {
-			
-			
-			
-		}
+		} */
 
 		mapper.writeValue(out, marshalledMap);
 
@@ -69,8 +97,17 @@ public class TrafficTrenderWorker extends HttpServlet{
 	public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
+	/*
+	private static Map<Location, Map<String, Object>> getDetailsRequest(final Map<String, String[]> paramMap) {
 
-	public static Map<MeasurementType, Map<Location, Object>> getTreemapRequest(final Map<String, String[]> paramMap) {
+		List<Location> filterLocations = new ArrayList<Location>();
+		String[] locs = paramMap.get("fm");
+
+		return OnDemand.generatorResults(filterLocations);
+	}
+	 */
+
+	private static Map<MeasurementType, Map<Location, Object>> getTreemapRequest(final Map<String, String[]> paramMap) {
 		MeasurementType size = MeasurementType.valueOf(paramMap.get("size")[0]);
 		MeasurementType color = MeasurementType.valueOf(paramMap.get("color")[0]);
 
@@ -86,7 +123,7 @@ public class TrafficTrenderWorker extends HttpServlet{
 	}
 
 
-	public static Map<String,Map<Integer, Map<Integer, Object>>> getLinechartRequest(final Map<String, String[]> paramMap) {
+	private static Map<String,Map<Integer, Map<Integer, Object>>> getLinechartRequest(final Map<String, String[]> paramMap) {
 		MeasurementType y = MeasurementType.valueOf(paramMap.get("y")[0]);
 		Location zoomLevel = stringToLocation(paramMap.get("zoomlevel")[0]);
 		boolean aggregated = false; 
@@ -105,8 +142,16 @@ public class TrafficTrenderWorker extends HttpServlet{
 		return LineChart.generatorResults(zoomLevel, filterLocations, y, aggregated);
 	}
 
+	/*
+	private static Map<String, Object> marshallDetailsResult(
+			final Map<Location, Map<String, Object>> result) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	 */
+
 	// TODO get rid of twice mapping
-	public static Map<String, Object> marshallTreemapResult(final Map<MeasurementType, Map<Location, Object>> resultMap, final MeasurementType size, final MeasurementType color) {
+	private static Map<String, Object> marshallTreemapResult(final Map<MeasurementType, Map<Location, Object>> resultMap, final MeasurementType size, final MeasurementType color) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("name", "States");
 
@@ -188,7 +233,7 @@ public class TrafficTrenderWorker extends HttpServlet{
 		return result;
 	}
 
-	public static Map<String, Object> marshallLinechartResult(final Map<String, Map<Integer, Map<Integer, Object>>> resultMap, final MeasurementType y) {
+	private static Map<String, Object> marshallLinechartResult(final Map<String, Map<Integer, Map<Integer, Object>>> resultMap, final MeasurementType y) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("type", y.toString());
 		List<Map<String, Object>> locations = new ArrayList<Map<String, Object>>();
@@ -214,7 +259,7 @@ public class TrafficTrenderWorker extends HttpServlet{
 		return result;
 	}
 
-	public static Location stringToLocation(final String loc) {
+	private static Location stringToLocation(final String loc) {
 		if (loc == null || loc.isEmpty() || loc.toLowerCase().equals("states"))
 			return new Location();
 		String[] arr = loc.split("@");
