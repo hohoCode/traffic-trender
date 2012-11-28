@@ -22,7 +22,7 @@ public class OnDemand2 {
 	public Map<String, Integer> getMap() {return f2;}
     }
 
-    public static Map<String, Map<Location, Object>> generatorResults(List<Location> filter){
+    public static Map<Location, Map<String, Object>> generatorResults(List<Location> filter){
 	///Connect DB
 	MysqlConnect db = new MysqlConnect();
 	if (!db.dbConnect()){
@@ -71,11 +71,11 @@ public class OnDemand2 {
 	return runDB(querieStrings, locaMap, filter, db);		
     }    
 
-    private static  Map<String, Map<Location, Object>> runDB(List<String> queries, 
+    private static  Map<Location, Map<String, Object>> runDB(List<String> queries, 
 	    Map<String, Integer> locaMap, 
 	    List<Location> filter,
 	    MysqlConnect db) {
-	Map<String, Map<Location, Object>> returnedMap = new HashMap<String, Map<Location,Object>>();
+	Map<Location, Map<String, Object>> returnedMap = new HashMap<Location, Map<String,Object>>();
 	try {
 	    for (int i = 0; i < queries.size(); i++) {
 		System.err.println("SQL: " + queries.get(i));
@@ -85,8 +85,8 @@ public class OnDemand2 {
 		    return null;
 		}
 
-		Map<Location, Object> innerMap = new HashMap<Location, Object>();
-		Map<Location, Object> innerMap2 = new HashMap<Location, Object>();
+		
+		//Map<String, Object> innerMap2 = new HashMap<Location, Object>();
 
 		while (topTwenty.next()) {
 		    String constraintsString = " (road_name = \"" + topTwenty.getString("road_name") + "\" "
@@ -94,29 +94,28 @@ public class OnDemand2 {
 			    + "and county = \"" + topTwenty.getString("county") + "\" "
 			    + "and location = \"" + topTwenty.getString("location")+ "\") ";		
 		    int index = locaMap.get(constraintsString);
-		    //System.out.println("INDEX: "+index);		    
-		    if (i > 2){
-			break;
+		    Map<String, Object> innerMap = null;
+		    
+		    if (returnedMap.containsKey(filter.get(index))){
+			innerMap = returnedMap.get(filter.get(index));
+		    } else {
+			innerMap = new HashMap<String, Object>();
 		    }
-		    innerMap.put(filter.get(index), topTwenty.getFloat("output"));			
 
-		    if (i == 2) {
+		    if (i == 0){//AVG
+			innerMap.put("AVG", topTwenty.getFloat("output"));
+		    } else if (i == 1) {///SD
+			innerMap.put("SD", topTwenty.getFloat("output"));
+		    } else if (i == 2) {///MAX and Date
 			int year = topTwenty.getInt("year");
 			int month = topTwenty.getInt("month");		    
-			innerMap2.put(filter.get(index), String.format("%04d-%02d", year, month));
+			innerMap.put("DATE", String.format("%04d-%02d", year, month));
+			innerMap.put("MAX", topTwenty.getFloat("output"));			
+		    } else {
+			System.err.println("Outcome Not POSSIBLE!");
+			return null;
 		    }
-		}
-		if (i == 0){//AVG
-		    returnedMap.put("AVG", innerMap);
-		} else if (i == 1) {///SD
-		    returnedMap.put("SD", innerMap);
-		} else if (i == 2) {///MAX
-		    returnedMap.put("MAX", innerMap);
-		    returnedMap.put("DATE", innerMap2);
-		} else {
-		    System.err.println("Outcome Not POSSIBLE!");
-		    return null;
-
+		    returnedMap.put(filter.get(index), innerMap);
 		}
 	    }	
 	} catch (SQLException e) {
@@ -177,18 +176,17 @@ public class OnDemand2 {
 	inputFilter.add(new Location("SC", "GREENVILLE", "I-385", "I-385 @ End of Freeway"));
 	inputFilter.add(new Location("SC", "GREENVILLE", "I-185", "I-185 @ SC-20/Piedmont Hwy/Exit 10"));
 	inputFilter.add(new Location("SC", "GREENVILLE", "I-185", "I-185 @ Henrydale Ave/Mills Ave"));
-	Map<String, Map<Location, Object>> outNames = OnDemand2.generatorResults(inputFilter);
-	List<String> outkeys = new ArrayList<String>(outNames.keySet());
+	Map<Location, Map<String, Object>> outNames = OnDemand2.generatorResults(inputFilter);
+	List<Location> outkeys = new ArrayList<Location>(outNames.keySet());
 
-	for (String aa: outkeys) {  	       
-	    Map<Location, Object> value = outNames.get(aa);
-	    System.out.println("Value: " + aa);
+	for (Location aa: outkeys) {  	       
+	    Map<String, Object> value = outNames.get(aa);
+	    System.out.println("Value: " + aa.getLocation()+ " "+aa.getQueryString());
 
-	    List<Location> keys = new ArrayList<Location>(value.keySet());
-	    for (Location key: keys) {
-		System.out.println("OUT:"+key.getLocation()+ " "+key.getQueryString() + " VALUE:"+value.get(key));
+	    List<String> keys = new ArrayList<String>(value.keySet());
+	    for (String key: keys) {
+		System.out.println("OUT: VALUE:"+key + " VALUE: "+ value.get(key));
 	    }
-
 	}  
     }*/
 
