@@ -84,7 +84,7 @@ public class LineChart {
 			}
 
 			while (topTen.next()) {
-				targetSet.add(topTen.getString((!aggregated?"location":zoom.getNextLevel())));
+				targetSet.add(topTen.getString(aggregated?zoom.getNextLevel():"location"));
 			}
 
 		} catch (SQLException e) {
@@ -119,8 +119,8 @@ public class LineChart {
 
 		for (String target : targetSet) {
 			String newQuery = query;
-			newQuery += " where target = \'" + target
-					+ "\' group by year, month, target";
+			newQuery += " where target = '" + target
+					+ "' group by year, month, target";
 
 			newQuery = newQuery.replaceAll("target", aggregated?zoom.getNextLevel() : "location");
 
