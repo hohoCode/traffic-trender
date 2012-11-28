@@ -1,5 +1,7 @@
 package org.traffictrender.worker;
 
+//package org.traffictrender.worker;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -20,7 +22,7 @@ public class OnDemand {
 	public Map<String, Integer> getMap() {return f2;}
     }
 
-    public static Map<Location, Statistics> generatorResults(List<Location> filter){
+    public static Map<Location, Map<String, String>> generatorResults(List<Location> filter){
 	///Connect DB
 	MysqlConnect db = new MysqlConnect();
 	if (!db.dbConnect()){
@@ -36,82 +38,86 @@ public class OnDemand {
 	}
 	String constraintString = outTuple2.getString();
 	Map<String, Integer> locaMap = outTuple2.getMap();
-	
-	///Prepared returned value
-	Map<Integer, Statistics> returnedMap = new HashMap<Integer, Statistics>();
-
-	for (int i= 0; i< filter.size(); i++) {
-	    returnedMap.put(i, new Statistics());
-	}
 
 	////Get MIN
-	String query = "SELECT min(impact_factor) as output, road_name, state, county, location " 
+	List<String> querieStrings = new LinkedList<String>();
+	/*String query = "SELECT min(impact_factor) as output, road_name, state, county, location " 
+		+ " FROM " + db.getClause() 
+		+ constraintString 
+		+ " GROUP BY location, road_name, county, state";*/
+
+	///Average - 0
+	String queryAVE = "SELECT avg(impact_factor) as output, road_name, state, county, location " 
 		+ " FROM " + db.getClause() 
 		+ constraintString 
 		+ " GROUP BY location, road_name, county, state";	
-	returnedMap = runDB(query, locaMap, returnedMap, db, 0);
+	querieStrings.add(queryAVE);
 
-	////MAX
-	query = "SELECT max(impact_factor) as output, road_name, state, county, location " 
+	///SD - 1
+	String querySD = "SELECT STD(impact_factor) as output, road_name, state, county, location " 
 		+ " FROM " + db.getClause() 
 		+ constraintString 
 		+ " GROUP BY location, road_name, county, state";	
-	returnedMap = runDB(query, locaMap, returnedMap, db, 1);
+	querieStrings.add(querySD);
 
-	///Average
-	query = "SELECT avg(impact_factor) as output, road_name, state, county, location " 
+	////MAX - 2
+	String queryMax = "SELECT max(impact_factor) as output, road_name, state, county, location, year, month " 
 		+ " FROM " + db.getClause() 
 		+ constraintString 
 		+ " GROUP BY location, road_name, county, state";	
-	returnedMap = runDB(query, locaMap, returnedMap, db, 2);
+	//returnedMap = runDB(query, locaMap, returnedMap, db, 1);
+	querieStrings.add(queryMax);
 
-	///SD
-	query = "SELECT STD(impact_factor) as output, road_name, state, county, location " 
-		+ " FROM " + db.getClause() 
-		+ constraintString 
-		+ " GROUP BY location, road_name, county, state";	
-	returnedMap = runDB(query, locaMap, returnedMap, db, 3);
-
-	///Conclude 
-	Map<Location, Statistics> finalReturnedMap = new HashMap<Location, Statistics>();
-	for (int i = 0; i < filter.size(); i++) {
-	    finalReturnedMap.put(filter.get(i), returnedMap.get(i));
-	}
-	return finalReturnedMap;	
+	return runDB(querieStrings, locaMap, filter, db);		
     }    
 
-    private static  Map<Integer, Statistics> runDB(String query, 
-	    Map<String, Integer> locaMap, 
-	    Map<Integer, Statistics> returnedMap,
-	    MysqlConnect db, 
-	    int type) {
-
+    private static  Map<Location, Map<String, String>> runDB(List<String> queries, 
+                    	    Map<String, Integer> locaMap, 
+                    	    List<Location> filter,
+                    	    MysqlConnect db) {
+	Map<Location, Map<String, String>> returnedMap = new HashMap<Location, Map<String,String>>();
 	try {
-	    System.err.println("SQL: " + query);
-	    ResultSet topTwenty = db.runSQL(query);
-	    if (topTwenty == null) {
-		System.err.println("No Results Retrieved");
-		return null;
-	    }
-
-	    while (topTwenty.next()) {
-		String constraintsString = " (road_name = \'" + topTwenty.getString("road_name") + "\' "
-			+ "and state = \'" + topTwenty.getString("state")+"\' "
-			+ "and county = \'" + topTwenty.getString("county") + "\' "
-			+ "and location = \'" + topTwenty.getString("location")+ "\') ";		
-		int index = locaMap.get(constraintsString);
-		if (type == 0){
-		    System.out.println("MIN "+index+" "+topTwenty.getFloat("output"));
-		    returnedMap.get(index).setMin(topTwenty.getFloat("output"));
-		} else if (type == 1) {
-		    System.out.println("MAX "+index+" "+topTwenty.getFloat("output"));
-		    returnedMap.get(index).setMax(topTwenty.getFloat("output"));		    
-		} else if (type == 2) {
-		    System.out.println("AVG "+index+" "+topTwenty.getFloat("output"));
-		    returnedMap.get(index).setAverage(topTwenty.getFloat("output"));
-		} else {
-		    System.out.println("SD "+index+" "+topTwenty.getFloat("output"));
-		    returnedMap.get(index).setSD(topTwenty.getFloat("output"));
+	    for (int i = 0; i < queries.size(); i++) {
+		System.err.println("SQL: " + queries.get(i));
+		ResultSet topTwenty = db.runSQL(queries.get(i));
+		if (topTwenty == null) {
+		    System.err.println("No Results Retrieved");
+		    return null;
+		}
+		
+		while (topTwenty.next()) {
+		    String constraintsString = " (road_name = \'" + topTwenty.getString("road_name") + "\' "
+			    + "and state = \'" + topTwenty.getString("state")+"\' "
+			    + "and county = \'" + topTwenty.getString("county") + "\' "
+			    + "and location = \'" + topTwenty.getString("location")+ "\') ";		
+		    int index = locaMap.get(constraintsString);
+		    System.out.println("INDEX: "+index);
+		    
+		    if (i == 0){//AVG
+			//System.out.println("MIN "+index+" "+topTwenty.getFloat("output"));
+			Map<String, String> innerMap = new HashMap<String, String>(); 
+			innerMap.put("AVG", Float.toString(topTwenty.getFloat("output")));
+			returnedMap.put(filter.get(index), innerMap);
+		    } else if (i == 1) {///SD
+			//System.out.println("MAX "+index+" "+topTwenty.getFloat("output"));
+			Map<String, String> innerMap = new HashMap<String, String>(); 
+			innerMap.put("SD", Float.toString(topTwenty.getFloat("output")));
+			returnedMap.put(filter.get(index), innerMap);
+			//returnedMap.get(index).setMax(topTwenty.getFloat("output"));		    
+		    } else if (i == 2) {///MAX
+			//System.out.println("AVG "+index+" "+topTwenty.getFloat("output"));
+			Map<String, String> innerMap = new HashMap<String, String>(); 
+			innerMap.put("MAX", Float.toString(topTwenty.getFloat("output")));
+			returnedMap.put(filter.get(index), innerMap);
+			Map<String, String> innerMap2 = new HashMap<String, String>();
+			String yearString = topTwenty.getString("year");
+			String monString = topTwenty.getString("month");	
+			innerMap.put("DATE", yearString+"/"+monString);
+			returnedMap.put(filter.get(index), innerMap);			
+		    } else {
+			System.err.println("Outcome Not POSSIBLE!");
+			return null;
+		    }
 		}
 	    }
 	} catch (SQLException e) {
@@ -169,11 +175,11 @@ public class OnDemand {
 	List<Location> inputFilter = new LinkedList<Location>(); //Input Argument
 	inputFilter.add(new Location("SC", "GREENVILLE", "I-185", "I-185 @ East Toll Plaza"));
 	inputFilter.add(new Location("MD", "ALLEGANY", "I-68", "I-68 @ Hillcrest Dr/Exit 45"));
-	inputFilter.add(new Location("SC", "GREENVILLE", "I-185", "I-385 @ End of Freeway"));
+	inputFilter.add(new Location("SC", "GREENVILLE", "I-385", "I-385 @ End of Freeway"));
 	inputFilter.add(new Location("SC", "GREENVILLE", "I-185", "I-185 @ SC-20/Piedmont Hwy/Exit 10"));
-	inputFilter.add(new Location("SC", "GREENVILLE", "I-185", "I-185 @ Henrydale Ave/Mills Ave"));
-	inputFilter.add(new Location("SC", "GREENVILLE", "I-185", "I-185 @ Henrydale Ave/Mills Ave"));
-	inputFilter.add(new Location("SC", "GREENVILLE", "I-185", "I-185 @ Henrydale Ave/Mills Ave"));
+	//inputFilter.add(new Location("SC", "GREENVILLE", "I-185", "I-185 @ Henrydale Ave/Mills Ave"));
+	//inputFilter.add(new Location("SC", "GREENVILLE", "I-185", "I-185 @ Henrydale Ave/Mills Ave"));
+	//inputFilter.add(new Location("SC", "GREENVILLE", "I-185", "I-185 @ Henrydale Ave/Mills Ave"));
 	OnDemand.generatorResults(inputFilter);
     }*/
 
