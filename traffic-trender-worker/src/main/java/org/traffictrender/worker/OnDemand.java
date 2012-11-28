@@ -165,7 +165,7 @@ public class OnDemand {
 	if (flag == 1){
 	    whereClause += ")";
 	}
-	Tuple2 returnValTuple2 = new OnDemand2.Tuple2(whereClause, locaMap); 
+	Tuple2 returnValTuple2 = new OnDemand.Tuple2(whereClause, locaMap); 
 	return returnValTuple2;
     }
 
