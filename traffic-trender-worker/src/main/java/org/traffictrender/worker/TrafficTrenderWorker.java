@@ -54,6 +54,10 @@ public class TrafficTrenderWorker extends HttpServlet{
 			Map<String,Map<Integer, Map<Integer, Object>>> result = getLinechartRequest(map);
 			marshalledMap = marshallLinechartResult(result, MeasurementType.valueOf(y));
 
+		} else if (type.equals("detail")) {
+			
+			
+			
 		}
 
 		mapper.writeValue(out, marshalledMap);
