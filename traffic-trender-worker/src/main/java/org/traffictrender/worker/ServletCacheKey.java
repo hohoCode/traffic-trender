@@ -1,6 +1,7 @@
 package org.traffictrender.worker;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -10,8 +11,10 @@ public class ServletCacheKey {
 	public ServletCacheKey (final Map<String, String[]> paramMap) {
 		if (paramMap != null) {
 			String[] filter = paramMap.get("fm");
-			if (filter != null && filter.length != 0)
+			if (filter != null && filter.length != 0) {
+				filterMenu = new HashSet<String>();
 				filterMenu.addAll(Arrays.asList(filter));
+			}
 			String[] types = paramMap.get("type");
 			if (types != null && types.length != 0)
 				type = types[0];
