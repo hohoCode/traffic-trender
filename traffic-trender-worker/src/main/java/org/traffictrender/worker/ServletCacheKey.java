@@ -7,7 +7,8 @@ import java.util.Set;
 
 public class ServletCacheKey {
 	private Set<String> filterMenu;
-	private String type, zoomlevel, size, color;
+	private String type, zoomlevel, size, color, y;
+	private Boolean aggregated;
 	public ServletCacheKey (final Map<String, String[]> paramMap) {
 		if (paramMap != null) {
 			String[] filter = paramMap.get("fm");
@@ -27,17 +28,27 @@ public class ServletCacheKey {
 			String[] colors = paramMap.get("color");
 			if (colors != null && colors.length != 0)
 				color = colors[0];
+			String[] ys = paramMap.get("y");
+			if (ys != null && ys.length != 0)
+				y = ys[0];
+			aggregated = false;
+			String[] aggre = paramMap.get("aggregated");
+			if (aggre != null && aggre.length > 0 && aggre[0].toLowerCase().equals("true"))
+				aggregated = true;
 		}
 	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result
+				+ ((aggregated == null) ? 0 : aggregated.hashCode());
 		result = prime * result + ((color == null) ? 0 : color.hashCode());
 		result = prime * result
 				+ ((filterMenu == null) ? 0 : filterMenu.hashCode());
 		result = prime * result + ((size == null) ? 0 : size.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((y == null) ? 0 : y.hashCode());
 		result = prime * result
 				+ ((zoomlevel == null) ? 0 : zoomlevel.hashCode());
 		return result;
@@ -61,6 +72,27 @@ public class ServletCacheKey {
 		} else if (!type.equals(other.type)) {
 			return false;
 		}
+		if (zoomlevel == null) {
+			if (other.zoomlevel != null) {
+				return false;
+			}
+		} else if (!zoomlevel.equals(other.zoomlevel)) {
+			return false;
+		}
+		if (aggregated == null) {
+			if (other.aggregated != null) {
+				return false;
+			}
+		} else if (!aggregated.equals(other.aggregated)) {
+			return false;
+		}
+		if (y == null) {
+			if (other.y != null) {
+				return false;
+			}
+		} else if (!y.equals(other.y)) {
+			return false;
+		}
 		if (color == null) {
 			if (other.color != null) {
 				return false;
@@ -75,14 +107,6 @@ public class ServletCacheKey {
 		} else if (!size.equals(other.size)) {
 			return false;
 		}
-		if (zoomlevel == null) {
-			if (other.zoomlevel != null) {
-				return false;
-			}
-		} else if (!zoomlevel.equals(other.zoomlevel)) {
-			return false;
-		}
-		
 		if (filterMenu == null) {
 			if (other.filterMenu != null) {
 				return false;
@@ -90,9 +114,8 @@ public class ServletCacheKey {
 		} else if (!filterMenu.equals(other.filterMenu)) {
 			return false;
 		}
-		
+
 		return true;
 	}
-	
 	
 }
