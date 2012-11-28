@@ -96,7 +96,7 @@
 		<configuration>
           <url>http://127.0.0.1:8080/manager</url>
 		  <server>TomcatServer</server>
-		  <path>/traffic-trender/worker</path>
+		  <path>/traffic-trender</path>
 		</configuration>
 	  </plugin>
 	</plugins>
