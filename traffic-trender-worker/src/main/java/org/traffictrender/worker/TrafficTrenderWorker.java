@@ -13,24 +13,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.map.LRUMap;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
 @SuppressWarnings("serial")
 public class TrafficTrenderWorker extends HttpServlet{
 
-	private static Map<ServletCacheKey, Map<String, Object>> treemapCache;
-	private static Map<ServletCacheKey, Map<String, Object>> linechartCache;
+	private static LRUMap treemapCache;
+	private static LRUMap linechartCache;
+	private static LRUMap detailCache;
+	private static final int MAXIMUM_CACHE_SIZE = 20;
 	/*
 	private static Map<ServletCacheKey, Map<String, Object>> detailCache;
 	 */
 
 	static {
-		treemapCache = new HashMap<ServletCacheKey, Map<String, Object>>();
-		linechartCache = new HashMap<ServletCacheKey, Map<String, Object>>();
-		/*
-		detailCache = new HashMap<ServletCacheKey, Map<String, Object>>();
-		 */
+		treemapCache = new LRUMap(MAXIMUM_CACHE_SIZE);
+		linechartCache = new LRUMap(MAXIMUM_CACHE_SIZE * 2);
+		detailCache = new LRUMap(MAXIMUM_CACHE_SIZE * 10);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -56,7 +57,7 @@ public class TrafficTrenderWorker extends HttpServlet{
 		if (type.equals("treemap")) {
 
 			if (treemapCache.containsKey(key)) {
-				marshalledMap = treemapCache.get(key);
+				marshalledMap = (Map<String, Object>) treemapCache.get(key);
 				System.err.println("treemap cache hit!");
 			} else {
 				String size = map.get("size")[0], color = map.get("color")[0];
@@ -72,7 +73,7 @@ public class TrafficTrenderWorker extends HttpServlet{
 		} else if (type.equals("linechart")) {
 
 			if (linechartCache.containsKey(key)) {
-				marshalledMap = linechartCache.get(key);
+				marshalledMap = (Map<String, Object>) linechartCache.get(key);
 				System.err.println("linechart cache hit!");
 			} else {
 				String y = map.get("y")[0];
@@ -83,12 +84,12 @@ public class TrafficTrenderWorker extends HttpServlet{
 				if (marshalledMap != null && !marshalledMap.isEmpty())
 					linechartCache.put(key, marshalledMap);
 			}
-		} /* else if (type.equals("detail")) {
-			// TODO adding cache
+		} else if (type.equals("detail")) {
+
 			Map<Location, Map<String, Object>> result = getDetailsRequest(map);
 			marshalledMap = marshallDetailsResult(result);
 
-		} */
+		}
 
 		mapper.writeValue(out, marshalledMap);
 
@@ -99,15 +100,32 @@ public class TrafficTrenderWorker extends HttpServlet{
 	public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
-	/*
+
+	@SuppressWarnings("unchecked")
 	private static Map<Location, Map<String, Object>> getDetailsRequest(final Map<String, String[]> paramMap) {
 
-		List<Location> filterLocations = new ArrayList<Location>();
-		String[] locs = paramMap.get("fm");
+		Map<Location, Map<String, Object>> result = new HashMap<Location, Map<String, Object>>();
 
-		return OnDemand.generatorResults(filterLocations);
+		List<Location> filterLocations = new ArrayList<Location>();
+		String[] locs = paramMap.get("location");
+		if (locs != null && locs.length != 0)
+			for (String loc : locs) {
+				Location l = stringToLocation(loc);
+				if (detailCache.containsKey(l))
+					result.put(l, (Map<String, Object>) detailCache.get(l));
+				else
+					filterLocations.add(l);
+			}
+
+		if (!filterLocations.isEmpty()) {
+			Map<Location, Map<String, Object>> results = OnDemand.generatorResults(filterLocations);
+			detailCache.putAll(results);
+			result.putAll(results);
+		}
+		
+		return result;
 	}
-	 */
+
 
 	private static Map<MeasurementType, Map<Location, Object>> getTreemapRequest(final Map<String, String[]> paramMap) {
 		MeasurementType size = MeasurementType.valueOf(paramMap.get("size")[0]);
@@ -144,13 +162,18 @@ public class TrafficTrenderWorker extends HttpServlet{
 		return LineChart.generatorResults(zoomLevel, filterLocations, y, aggregated);
 	}
 
-	/*
 	private static Map<String, Object> marshallDetailsResult(
-			final Map<Location, Map<String, Object>> result) {
-		// TODO Auto-generated method stub
-		return null;
+			final Map<Location, Map<String, Object>> resultMap) {
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		if (resultMap != null && !resultMap.isEmpty()) {
+			for (Location l : resultMap.keySet()) {
+				result.put(l.toString(), resultMap.get(l));
+			}
+		}
+
+		return result;
 	}
-	 */
 
 	// TODO get rid of twice mapping
 	private static Map<String, Object> marshallTreemapResult(final Map<MeasurementType, Map<Location, Object>> resultMap, final MeasurementType size, final MeasurementType color) {
