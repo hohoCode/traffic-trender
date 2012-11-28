@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class OnDemand2 {
+public class OnDemand {
 
     public static class Tuple2 {
 	private String f1;
