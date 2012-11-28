@@ -57,6 +57,7 @@ public class TrafficTrenderWorker extends HttpServlet{
 
 			if (treemapCache.containsKey(key)) {
 				marshalledMap = treemapCache.get(key);
+				System.err.println("treemap cache hit!");
 			} else {
 				String size = map.get("size")[0], color = map.get("color")[0];
 				if (StringUtils.isBlank(size))
@@ -72,6 +73,7 @@ public class TrafficTrenderWorker extends HttpServlet{
 
 			if (linechartCache.containsKey(key)) {
 				marshalledMap = linechartCache.get(key);
+				System.err.println("linechart cache hit!");
 			} else {
 				String y = map.get("y")[0];
 				if (StringUtils.isBlank(y))
