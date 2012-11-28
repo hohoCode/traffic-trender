@@ -122,8 +122,7 @@ public class LineChart {
 			newQuery += " where target = \'" + target
 					+ "\' group by year, month, target";
 
-			if (aggregated)
-				newQuery = newQuery.replaceAll("target", aggregated?zoom.getNextLevel() : "location");
+			newQuery = newQuery.replaceAll("target", aggregated?zoom.getNextLevel() : "location");
 
 			System.err.println("SQL2: " + newQuery);
 			try {
