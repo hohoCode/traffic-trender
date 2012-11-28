@@ -66,7 +66,7 @@ public class TrafficTrenderWorker extends HttpServlet{
 					throw new ServletException("color must be specified for treemap");
 				Map<MeasurementType, Map<Location, Object>> result = getTreemapRequest(map);
 				marshalledMap = marshallTreemapResult(result, MeasurementType.valueOf(size), MeasurementType.valueOf(color));
-				if (marshalledMap != null && marshalledMap.isEmpty())
+				if (marshalledMap != null && !marshalledMap.isEmpty())
 					treemapCache.put(key, marshalledMap);
 			}
 		} else if (type.equals("linechart")) {
@@ -80,7 +80,7 @@ public class TrafficTrenderWorker extends HttpServlet{
 					throw new ServletException("y must be specified for linechart");
 				Map<String,Map<Integer, Map<Integer, Object>>> result = getLinechartRequest(map);
 				marshalledMap = marshallLinechartResult(result, MeasurementType.valueOf(y));
-				if (marshalledMap != null && marshalledMap.isEmpty())
+				if (marshalledMap != null && !marshalledMap.isEmpty())
 					linechartCache.put(key, marshalledMap);
 			}
 		} /* else if (type.equals("detail")) {
