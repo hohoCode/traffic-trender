@@ -23,10 +23,7 @@ public class TrafficTrenderWorker extends HttpServlet{
 	private static LRUMap treemapCache;
 	private static LRUMap linechartCache;
 	private static LRUMap detailCache;
-	private static final int MAXIMUM_CACHE_SIZE = 20;
-	/*
-	private static Map<ServletCacheKey, Map<String, Object>> detailCache;
-	 */
+	private static final int MAXIMUM_CACHE_SIZE = 10;
 
 	static {
 		treemapCache = new LRUMap(MAXIMUM_CACHE_SIZE);
