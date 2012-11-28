@@ -109,9 +109,9 @@ public class Location {
 		if (this.state == null && this.county == null && this.road == null)
 			return "";
 		Joiner joiner = Joiner.on(" and ").skipNulls();
-		String state = (this.state != null ? ("state = \'" + this.state + "\'"):null),
-				county = (this.county != null ? ("county = \'" + this.county + "\'"):null),
-				roadName = (this.getRoad() != null ? ("road_name = \'" + this.getRoad() + "\'"):null);
+		String state = (this.state != null ? ("state = \"" + this.state + "\""):null),
+				county = (this.county != null ? ("county = \"" + this.county + "\""):null),
+				roadName = (this.getRoad() != null ? ("road_name = \"" + this.getRoad() + "\""):null);
 		if (state == null && county == null && roadName == null){
 			System.err.println("The values in the filter list are invalid.");
 		}
