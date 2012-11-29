@@ -4,6 +4,12 @@
  *
  */
 
+var addLinePopup = function(d) {
+    //var xy = d3.mouse(this);
+    $("#popup").text(d.name);
+    d3.select(this).style("stroke-width", "3.5px");
+}
+
 var runLinechart = function (trends) {
 
     var format = d3.time.format("%Y-%m");
@@ -96,7 +102,9 @@ var runLinechart = function (trends) {
     var path = location.append("path")
         .attr("class", "line")
         .attr("d", function(d) { return line(d.bottlenecks); })
-        .style("stroke", function(d) { return color(d.name); });
+        .style("stroke", function(d) { return color(d.name); })
+        .on("mouseover", addLinePopup)
+        .on("mouseout", function() { $("#popup").text(""); d3.select(this).style("stroke-width", "1.5px");});
 
     path.attr("stroke-dasharray", function(d){
         return  d3.select(this).node().getTotalLength() + "," +  d3.select(this).node().getTotalLength();
@@ -118,6 +126,7 @@ var runLinechart = function (trends) {
         .text(function(d) { return d.name; });
 
 }
+
 
 //Set some reasonable defaults
 var defaultY = "impactFactor";
@@ -153,7 +162,6 @@ var updateLinechart = function() {
         curzoom = zoomarr.join("@");
     }
     console.log(curzoom);
-    //var curzoom = 'MD'; //TODO: Hard coded for now until backend works
     var yvalue = uiLineGraph.translate(uiLineGraph.selected);
     //get filtermenu - should be based on current zoom
     var filtermenu = uiFilter.getFilterSelections();

@@ -99,7 +99,9 @@ var runLinechartAgg = function (trends) {
     var path = location.append("path")
         .attr("class", "line")
         .attr("d", function(d) { return line(d.bottlenecks); })
-        .style("stroke", function(d) { return color(d.name); });
+        .style("stroke", function(d) { return color(d.name); })
+        .on("mouseover", addLinePopup)
+        .on("mouseout", function() { $("#popup").text(""); d3.select(this).style("stroke-width", "1.5px");});
 
     path.attr("stroke-dasharray", function(d){
         return  d3.select(this).node().getTotalLength() + "," +  d3.select(this).node().getTotalLength();

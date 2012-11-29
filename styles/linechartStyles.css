@@ -15,3 +15,10 @@
     stroke: steelblue;
     stroke-width: 1.5px;
 }
+
+#popup {
+    position: absolute;
+    top: 50px;
+    left: 450px;
+    font-weight: bold;
+}
