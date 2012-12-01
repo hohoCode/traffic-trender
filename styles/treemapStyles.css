@@ -9,6 +9,12 @@
     /*margin: 40px auto auto;*/
 }
 
+#loading {
+    position: absolute;
+    top: 200px;
+    left: 500px;
+}
+
 #tabs {
     position:absolute;
     top: 525px;

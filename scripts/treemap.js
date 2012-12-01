@@ -296,10 +296,13 @@ treemap.update = function() {
     if (newfilters.length == 0) {
 	    $("#chart svg").remove();
 	    console.log("No filter menu selections.");
-		return
+		return;
     }
-    
+
+    //Let user know request is loading
 	$("body").css("cursor", "wait");
+    $("#chart svg").fadeTo(100,0.2);
+    $("#chart").append("<div id='loading'><img src='loading.gif' /></div>");
 	treemap.requesting = true;
 
     var newsize = uiTreeMap.getSize();
@@ -316,6 +319,7 @@ treemap.update = function() {
         dataType: 'json',
         success: function(root) {
 		    $("#chart svg").remove();
+            $("#loading").remove();
 			treemap.run(root)
 			treemap.requesting = false;
 			$("body").css("cursor", "auto");    
