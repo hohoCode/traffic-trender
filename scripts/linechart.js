@@ -130,9 +130,12 @@ linechart.run = function (trends, id) {
 }
 
 linechart.initialize = function() {
+	linechart.requesting = false;
+	
 	//Set some reasonable defaults
 	var defaultY = "impactFactor";
 	uiLineGraph.setSelection(defaultY);
+	
 	linechart.update();
 }
 
@@ -142,6 +145,11 @@ linechart.initialize = function() {
  * need a new transition function for that.
  */
 linechart.update = function() {
+	if (linechart.requesting)
+		return;
+
+	linechart.requesting = true;
+	
     //get current zoom
     var zoom = $(".grandparent").text();
     var zoomarr = zoom.split(".");
@@ -155,7 +163,7 @@ linechart.update = function() {
     }
     
     console.log(curzoom);
-    
+	
     //get filtermenu - should be based on current zoom
     var filtermenu = uiFilter.getSelections();
     var yvalue = uiLineGraph.getSelection();
@@ -172,6 +180,7 @@ linechart.update = function() {
         dataType: 'json',
         success: function(trends) {
 			linechart.run(trends, "#linechart");
+			linechart.requesting = false;
         }
     });
 }

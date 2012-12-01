@@ -9,11 +9,8 @@
 
 var linechartAgg = linechartAgg || {}; // namespace
 
-linechartAgg.run = function (trends) {
-	linechart.run(trends, "#linechart-aggregate");
-}
-
 linechartAgg.initialize = function() {
+	linechartAgg.requesting = false;
 	linechartAgg.update();
 }
 
@@ -23,6 +20,11 @@ linechartAgg.initialize = function() {
  * need a new transition function for that.
  */
 linechartAgg.update = function(yvalue) {
+	if (linechartAgg.requesting)
+		return;
+		
+	linechartAgg.requesting = true;
+	
     //get current zoom
     var zoom = $(".grandparent").text();
     var zoomarr = zoom.split(".");
@@ -51,6 +53,9 @@ linechartAgg.update = function(yvalue) {
         type: 'POST',
         data: linedata,
         dataType: 'json',
-        success: linechartAgg.run
+        success: function(trends) {
+			linechart.run(trends, "#linechart-aggregate");
+			linechartAgg.requesting = false;
+		}
     });
 }
