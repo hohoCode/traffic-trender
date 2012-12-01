@@ -46,7 +46,6 @@ linechartAgg.update = function(yvalue) {
     var url = backendurl + "/traffic-trender/worker";
     var linedata = "type=linechart&aggregated=true&y=" + yvalue + "&zoomlevel=" + curzoom + "&" + filtermenu;
 
-    $("#linechart-aggregate svg").remove();
     //d3.json(url, runLinechart);
     $.ajax({
         url: url,
@@ -54,6 +53,7 @@ linechartAgg.update = function(yvalue) {
         data: linedata,
         dataType: 'json',
         success: function(trends) {
+		    $("#linechart-aggregate svg").remove();
 			linechart.run(trends, "#linechart-aggregate");
 			linechartAgg.requesting = false;
 		}

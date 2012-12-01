@@ -171,7 +171,6 @@ linechart.update = function() {
     var url = backendurl + "/traffic-trender/worker";
     var linedata = "type=linechart&y=" + yvalue + "&zoomlevel=" + curzoom + "&" + filtermenu;
 
-    $("#linechart svg").remove();
     //d3.json(url, runLinechart);
     $.ajax({
         url: url,
@@ -179,6 +178,7 @@ linechart.update = function() {
         data: linedata,
         dataType: 'json',
         success: function(trends) {
+		    $("#linechart svg").remove();
 			linechart.run(trends, "#linechart");
 			linechart.requesting = false;
         }

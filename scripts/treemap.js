@@ -301,7 +301,6 @@ treemap.update = function() {
     var newTreemapUrl = backendurl + "/traffic-trender/worker";
     var data = treemap.buildURL(newcolor,newsize,newfilters);
 
-    $("#chart svg").remove();
     //d3.json(newTreemapUrl, treemap.run);
     $.ajax({
         url: newTreemapUrl,
@@ -309,6 +308,7 @@ treemap.update = function() {
         data: data,
         dataType: 'json',
         success: function(root) {
+		    $("#chart svg").remove();
 			treemap.run(root)
 			treemap.requesting = false;
 			$("body").css("cursor", "auto");    
