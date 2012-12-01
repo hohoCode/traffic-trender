@@ -14,7 +14,7 @@ uiFilter.init = function(filepath) {
         $("#uiFilter_tree").dynatree({
             checkbox: true,
             selectMode: 3,
-            children: data
+            children: [{"key": "all_states", "title": "All", "expand": true, "children": data}]
         });
         
 	    treemap.initialize();
@@ -56,15 +56,17 @@ uiFilter.apply = function() {
 uiFilter.getSelections = function(zoomlevel) {
     root = $("#uiFilter_tree").dynatree("getRoot");
     sel = root.tree.getSelectedNodes();
-    //var data = {};
     var arr = [];
-    
+        
     for (var i in sel) {
-        if (!sel[i].data.children) {
+		if (sel[i].data.key == "all_states") {
+			continue;
+		}
+			
+        if (sel[i].data.children == null) {
             var newkey = sel[i].data.key.replace(/,/g,"@");
             arr.push("fm=" + newkey);
         }
-        //data[ sel[i].data.key ] = true;
     }
     
     //TODO: Currently restricted to 50 items until HTTP 413 error is resolved

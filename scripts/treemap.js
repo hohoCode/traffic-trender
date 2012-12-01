@@ -39,7 +39,7 @@ var getMinMaxColors = function(root) {
 treemap.buildURL = function(color, size, filters) {
     var urlsize = size;
     var urlcolor = color;
-    var filtermenu = filters || uiFilter.getFilterSelections();
+    var filtermenu = filters || uiFilter.getSelections();
     var params = "type=treemap&color=" + urlcolor + "&size=" + urlsize + "&" + filtermenu;
     return params;
 }

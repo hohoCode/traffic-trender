@@ -27,6 +27,8 @@ Richard B. Johnson, Chris Musialek
 
     <script type="text/javascript" src="scripts/globals.js"></script>
 	<script type="text/javascript" src="scripts/treemap.js"></script>
+	<script type="text/javascript" src="scripts/linechart.js"></script>
+	<script type="text/javascript" src="scripts/linechart-aggregated.js"></script>
 
 	<script type="text/javascript" src="scripts/uiUtility.js"></script>
 	<script type="text/javascript" src="scripts/uiTreeMap.js"></script>
@@ -126,7 +128,6 @@ Richard B. Johnson, Chris Musialek
             <label id="uiLineGraph_timeLabel">
 				Duration
 			</label>
-            
 <!--
             <br />
             
@@ -140,32 +141,20 @@ Richard B. Johnson, Chris Musialek
 </div>
 
 <div id="visualizations"> <!--container-->
-<!-- Treemap -->
-
-<div id="chart">
+	<!-- Treemap -->	
+	<div id="chart"></div>
+	
+	<!-- Linechart -->
+	<div id="tabs">
+		<ul>
+			<li><a href="#linechart">Top 10 Locations</a></li>
+			<li><a href="#linechart-aggregate">Aggregated Boundaries</a></li>
+		</ul>
+		<div id="linechart"></div>
+		<div id="linechart-aggregate"></div>
+		<div id="popup"></div>
+	</div>
 </div>
 
-<!-- treemap.js script tag must continue to load after the id=chart div -->
-<script type="text/javascript">
-	//initializeTreemap();
-</script>
-
-
-<!-- Linechart -->
-<div id="tabs">
-    <ul>
-        <li><a href="#linechart">Top 10 Locations</a></li>
-        <li><a href="#linechart-aggregate">Aggregated Boundaries</a></li>
-    </ul>
-    <div id="linechart">
-    </div>
-    <div id="linechart-aggregate">
-        </div>
-    <div id="popup"></div>
-</div>
-<script src="scripts/linechart.js"></script>
-<script src="scripts/linechart-aggregated.js"></script>
-
-</div>
 </body>
 </html>
