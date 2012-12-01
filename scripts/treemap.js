@@ -302,7 +302,7 @@ treemap.update = function() {
     //Let user know request is loading
 	$("body").css("cursor", "wait");
     $("#chart svg").fadeTo(100,0.2);
-    $("#chart").append("<div id='loading'><img src='loading.gif' /></div>");
+    $("#chart").append("<div id='loading'><img src='images/loading.gif' /></div>");
 	treemap.requesting = true;
 
     var newsize = uiTreeMap.getSize();
