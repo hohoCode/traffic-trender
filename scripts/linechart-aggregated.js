@@ -42,6 +42,7 @@ linechartAgg.update = function(yvalue) {
 
     if (filtermenu.length == 0) {
 	    $("#linechart-aggregate svg").remove();
+	    console.log("No filter menu selections.");
 		return
     }
     

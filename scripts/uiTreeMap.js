@@ -7,6 +7,7 @@ var uiTreeMap = uiTreeMap || {}; // namespace
 
 uiTreeMap.init = function(filepath, visualCallback) {
 	uiTreeMap.changed = false;
+	uiTreeMap.changedFilter = false;
 	
     $("#uiTreeMapPanel").panel({
         stackable:true
@@ -17,7 +18,7 @@ uiTreeMap.init = function(filepath, visualCallback) {
             checkbox: true,
             selectMode: 3,
             children: [{"key": "all_states", "title": "All", "expand": true, "children": data}],
-			onClick: uiTreeMap.filterClickHandle
+			onClick: uiTreeMap.filter_onClick
         });
         
         visualCallback();
@@ -31,17 +32,19 @@ uiTreeMap.init = function(filepath, visualCallback) {
     $(window).resize(uiTreeMap.resize);
 }
 
-uiTreeMap.filterClickHandle = function(node, event) {
+uiTreeMap.filter_onClick = function(node, event) {
 	if( node.getEventTargetType(event) == "title" ) {
 		if (node.data.children != null)
 			node.toggleExpand();
 		else {
 			node.toggleSelect();
-			uiTreeMap.reportChange();
+			uiTreeMap.changed = true;
+			uiTreeMap.changedFilter = true;
 		}
 	}
 	else if( node.getEventTargetType(event) == "checkbox" ) {
-		uiTreeMap.reportChange();
+		uiTreeMap.changed = true;
+		uiTreeMap.changedFilter = true;
 	}
 }
 
@@ -50,16 +53,19 @@ uiTreeMap.reportChange = function() {
 }
 
 uiTreeMap.apply = function() {
-	if (uiTreeMap.changed) {
+	if (uiTreeMap.changed)
 		treemap.update();
+		
+	if (uiTreeMap.changedFilter) {
 		linechart.update();
 		linechartAgg.update();
 	}
-	else {
+	
+	if (uiTreeMap.changed == false && uiTreeMap.changedFilter == false)
 		console.log("Apply request denied due to no change.");
-	}
 	
 	uiTreeMap.changed = false;
+	uiTreeMap.changedFilter = false;
 }
 
 uiTreeMap.getSize = function() {

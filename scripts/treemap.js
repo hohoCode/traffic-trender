@@ -295,6 +295,7 @@ treemap.update = function() {
     
     if (newfilters.length == 0) {
 	    $("#chart svg").remove();
+	    console.log("No filter menu selections.");
 		return
     }
     

@@ -167,6 +167,7 @@ linechart.update = function() {
     
     if (filtermenu.length == 0) {
 	    $("#linechart svg").remove();
+	    console.log("No filter menu selections.");
 		return
     }
 
