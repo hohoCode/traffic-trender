@@ -262,9 +262,7 @@ treemap.run = function(root) {
 
     function popup(d) {
         return console.log(d.name);
-    }
-    
-	$("body").css("cursor", "auto");    
+    }    
 }
 
 treemap.initialize = function() {
@@ -304,6 +302,9 @@ treemap.update = function() {
         type: 'POST',
         data: data,
         dataType: 'json',
-        success: treemap.run
+        success: function(root) {
+			treemap.run(root)
+			$("body").css("cursor", "auto");    
+		}
     });
 }
