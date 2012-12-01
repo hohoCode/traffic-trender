@@ -7,7 +7,9 @@
  * the code to allow a div parameter to tell d3 where to add the linechart.
  */
 
-var runLinechartAgg = function (trends) {
+var linechartAgg = linechartAgg || {}; // namespace
+
+linechartAgg.run = function (trends) {
 
     var format = d3.time.format("%Y-%m");
     var minY = Number.MAX_VALUE, maxY = Number.MIN_VALUE;
@@ -100,7 +102,7 @@ var runLinechartAgg = function (trends) {
         .attr("class", "line")
         .attr("d", function(d) { return line(d.bottlenecks); })
         .style("stroke", function(d) { return color(d.name); })
-        .on("mouseover", addLinePopup)
+        .on("mouseover", linechart.addLinePopup)
         .on("mouseout", function() { $("#popup").text(""); d3.select(this).style("stroke-width", "1.5px");});
 
     path.attr("stroke-dasharray", function(d){
@@ -124,28 +126,16 @@ var runLinechartAgg = function (trends) {
 
 }
 
-//Set some reasonable defaults
-var defaultaggY = "impactFactor";
-var defaultaggZoom = "States";
-var defaultaggFilters = "fm=DC@DISTRICT OF COLUMBIA@I-395&fm=DC@DISTRICT OF COLUMBIA@I-395 HOV&fm=DC@DISTRICT OF COLUMBIA@I-66&fm=MD@ALLEGANY@I-68&fm=MD@ANNE ARUNDEL@I-195&fm=MD@ANNE ARUNDEL@I-695&fm=MD@ANNE ARUNDEL@I-895&fm=MD@ANNE ARUNDEL@I-895 Spur&fm=MD@ANNE ARUNDEL@I-97&fm=MD@ANNE ARUNDEL@US-50&fm=MD@BALTIMORE@I-195&fm=MD@BALTIMORE@I-695&fm=MD@BALTIMORE@I-70&fm=MD@BALTIMORE@I-795&fm=MD@BALTIMORE@I-83&fm=MD@BALTIMORE@I-895&fm=MD@BALTIMORE@I-95&fm=MD@CARROLL@I-70&fm=MD@CECIL@I-95&fm=MD@DORCHESTER@US-50&fm=MD@FREDERICK@I-270&fm=MD@FREDERICK@I-70&fm=MD@GARRETT@I-68&fm=MD@HARFORD@I-95&fm=MD@HOWARD@I-70&fm=MD@HOWARD@I-895&fm=MD@HOWARD@I-95&fm=MD@MONTGOMERY@I-270&fm=MD@MONTGOMERY@I-270 Spur&fm=MD@MONTGOMERY@I-370&fm=MD@MONTGOMERY@I-495&fm=MD@TALBOT@US-50&fm=MD@WASHINGTON@I-68&fm=MD@WASHINGTON@I-70&fm=MD@WASHINGTON@I-81&fm=MD@WICOMICO@US-50&fm=MD@WORCESTER@US-50&fm=VA@ALEXANDRIA@I-395&fm=VA@ALEXANDRIA@I-395 HOV&fm=VA@ALEXANDRIA@I-495&fm=VA@ARLINGTON@I-395&fm=VA@ARLINGTON@I-395 HOV&fm=VA@ARLINGTON@I-66&fm=VA@CAROLINE@I-95&fm=VA@CHESAPEAKE@I-264&fm=VA@CHESAPEAKE@I-464&fm=VA@CHESAPEAKE@I-64&fm=VA@CHESAPEAKE@I-664&fm=VA@CHESTERFIELD@I-295&fm=VA@CHESTERFIELD@I-95&fm=VA@COLONIAL HEIGHTS@I-95&fm=VA@EMPORIA@I-95&fm=VA@FAIRFAX@I-395&fm=VA@FAIRFAX@I-395 HOV&fm=VA@FAIRFAX@I-495&fm=VA@FAIRFAX@I-66&fm=VA@FAIRFAX@I-95&fm=VA@FAIRFAX@I-95 HOV&fm=VA@FREDERICKSBURG@I-95&fm=VA@GOOCHLAND@I-64&fm=VA@GREENSVILLE@I-95&fm=VA@HAMPTON@I-64&fm=VA@HAMPTON@I-664&fm=VA@HANOVER@I-295&fm=VA@HANOVER@I-95&fm=VA@HENRICO@I-295&fm=VA@HENRICO@I-64&fm=VA@HENRICO@I-95&fm=VA@HOPEWELL@I-295&fm=VA@JAMES CITY@I-64&fm=VA@MECKLENBURG@I-85&fm=VA@NEW KENT@I-64&fm=VA@NEWPORT NEWS@I-64&fm=VA@NEWPORT NEWS@I-664&fm=VA@NORFOLK@I-264&fm=VA@NORFOLK@I-464&fm=VA@NORFOLK@I-564&fm=VA@NORFOLK@I-64&fm=VA@PETERSBURG@I-95&fm=VA@PORTSMOUTH@I-264&fm=VA@PRINCE GEORGE@I-295&fm=VA@PRINCE GEORGE@I-95&fm=VA@PRINCE WILLIAM@I-66&fm=VA@PRINCE WILLIAM@I-95&fm=VA@PRINCE WILLIAM@I-95 HOV&fm=VA@RICHMOND@I-195&fm=VA@RICHMOND@I-64&fm=VA@RICHMOND@I-95&fm=VA@SPOTSYLVANIA@I-95&fm=VA@STAFFORD@I-95&fm=VA@SUFFOLK@I-664&fm=VA@SUSSEX@I-95&fm=VA@VIRGINIA BEACH@I-264&fm=VA@VIRGINIA BEACH@I-64&fm=VA@YORK@I-64";
-var defaultaggurl = backendurl + "/traffic-trender/worker";
-var defaultaggparams = "type=linechart&aggregated=true&y=" + defaultaggY + "&zoomlevel=" + defaultaggZoom + "&" + defaultaggFilters;
-
-$.ajax({
-    url: defaultaggurl,
-    type: 'POST',
-    data: defaultaggparams,
-    dataType: 'json',
-    success: runLinechartAgg
-});
-
+linechartAgg.initialize = function() {
+	linechartAgg.update();
+}
 
 /*
  * Currently, we are simply deleting the linechart and recreating the svg, but we
  * should use the update() function within d3 to update these lines instead. Will
  * need a new transition function for that.
  */
-var updateLinechartAgg = function() {
+linechartAgg.update = function(yvalue) {
     //get current zoom
     var zoom = $(".grandparent").text();
     var zoomarr = zoom.split(".");
@@ -157,9 +147,9 @@ var updateLinechartAgg = function() {
         curzoom = zoomarr.join("@");
     }
     console.log(curzoom);
-    var yvalue = uiLineGraph.translate(uiLineGraph.selected);
+    var yvalue = uiLineGraph.getSelection();
     //get filtermenu - should be based on current zoom
-    var filtermenu = uiFilter.getFilterSelections();
+    var filtermenu = uiFilter.getSelections();
 
     var url = backendurl + "/traffic-trender/worker";
     var linedata = "type=linechart&aggregated=true&y=" + yvalue + "&zoomlevel=" + curzoom + "&" + filtermenu;
@@ -171,7 +161,7 @@ var updateLinechartAgg = function() {
         type: 'POST',
         data: linedata,
         dataType: 'json',
-        success: runLinechartAgg
+        success: linechartAgg.run
     });
 
 }

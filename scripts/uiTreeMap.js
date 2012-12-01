@@ -13,19 +13,22 @@ uiTreeMap.init = function() {
     $("#uiTreeMap_applyButton").click(uiTreeMap.apply);
 }
 
-//Translates value in ui with backend query value used
-uiTreeMap.translate = function(item) {
-    var translator = {"Impact Factor": "impactFactor", "Maximum Length": "length", "Duration": "duration"};
-    if (translator[item]) {
-        return translator[item];
-    } else {
-        return item;
-    }
+uiTreeMap.apply = function() {
+    treemap.update();
 }
 
-uiTreeMap.apply = function() {
+uiTreeMap.getSize = function() {
+    return $("#uiTreeMap_size").val();
+}
 
-    updateTreemap();
+uiTreeMap.getColor = function() {
+    return $("#uiTreeMap_color").val();
+}
 
-    /* update the treemap here */
+uiTreeMap.setSize = function(size) {
+    $("#uiTreeMap_size").val(size);
+}
+
+uiTreeMap.setColor = function(color) {
+    $("#uiTreeMap_color").val(color);
 }

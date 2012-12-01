@@ -10,33 +10,31 @@ uiLineGraph.init = function(){
         stackable:true
     });
 
-    //$("input:radio[name=uiGraphSettingGroup]").click(uiLineGraph.apply);
-    $("input:radio[id=uiLineGraph_impactFactor]").attr("checked", true);
-    $("#uiLineGraph_applyButton").click(uiLineGraph.apply);
+    $("input:radio[name=uiGraphSettingGroup]").click(uiLineGraph.apply);
+    $("#uiLineGraph_impactFactorLabel").click(uiLineGraph.update);
+    $("#uiLineGraph_maximumLengthLabel").click(uiLineGraph.update);
+    $("#uiLineGraph_timeLabel").click(uiLineGraph.update);
+    //$("#uiLineGraph_applyButton").click(uiLineGraph.apply);
 }
 
-uiLineGraph.selected = "Impact Factor"; //default
+uiLineGraph.update = function() {
+	labelID = $(this).attr("id");
+	radioID = labelID.replace(/Label/,"");
+	
+	$("#"+radioID).attr("checked", true);
+	
+	uiLineGraph.apply();
+}
 
 uiLineGraph.apply = function() {
-	obj = $("input:radio[name=uiGraphSettingGroup]:checked");
-	sel = obj.val();
-
-	uiLineGraph.selected = sel;
-	var val = uiLineGraph.translate(uiLineGraph.selected);
-	
-	console.log( val );
-
-    updateLinechart();
-    updateLinechartAgg();
-	/* update line graph here */
+    linechart.update();
+    linechartAgg.update();
 }
 
-//Translates value in ui with backend query value used
-uiLineGraph.translate = function(item) {
-    var translator = {"Impact Factor": "impactFactor", "Maximum Length": "length", "Duration": "duration"};
-    if (translator[item]) {
-        return translator[item];
-    } else {
-        return item;
-    }
+uiLineGraph.getSelection = function() {
+	return $("input:radio[name=uiGraphSettingGroup]:checked").val();
+}
+
+uiLineGraph.setSelection = function(val) {
+    $("input:radio[value="+val+"]").attr("checked", true);
 }

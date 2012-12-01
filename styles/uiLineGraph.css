@@ -52,6 +52,16 @@ Richard B. Johnson
 	margin-bottom: 0.2em;
 }
 
+#uiLineGraph_impactFactor,
+#uiLineGraph_impactFactorLabel,
+#uiLineGraph_maximumLength,
+#uiLineGraph_maximumLengthLabel,
+#uiLineGraph_time,
+#uiLineGraph_timeLabel
+{
+	cursor: pointer;
+}
+
 #uiLineGraph_applyButton
 {
 	width:100%;

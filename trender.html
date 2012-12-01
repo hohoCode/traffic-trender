@@ -1,7 +1,6 @@
 <!--
 Contributors:
-Richard B. Johnson, 
-Chris Musialek
+Richard B. Johnson, Chris Musialek
 -->
 
 <html>
@@ -21,16 +20,20 @@ Chris Musialek
 
     <script type="text/javascript" src="controls/jquery/ui/js/jquery-1.8.2.js"></script>
     <script type="text/javascript" src="controls/jquery/ui/js/jquery-ui-1.9.1.custom.js"></script>    
-	<script src="controls/dynatree/src/jquery.dynatree.js" type="text/javascript"></script>		
+	<script type="text/javascript" src="controls/dynatree/src/jquery.dynatree.js"></script>		
 	<script type="text/javascript" src="controls/panel/ui.panel.js"></script>
 	<script type="text/javascript" src="controls/d3/d3.v2.js"></script>
 	<script type="text/javascript" src="controls/d3/d3.v2.min.js"></script>
+
     <script type="text/javascript" src="scripts/globals.js"></script>
+	<script type="text/javascript" src="scripts/treemap.js"></script>
+
 	<script type="text/javascript" src="scripts/uiUtility.js"></script>
 	<script type="text/javascript" src="scripts/uiTreeMap.js"></script>
 	<script type="text/javascript" src="scripts/uiLineGraph.js"></script>
 	<script type="text/javascript" src="scripts/uiFilter.js"></script>
 	<script type="text/javascript" src="scripts/uiInitialize.js"></script>
+
 </head>
 
 <body>
@@ -48,9 +51,9 @@ Chris Musialek
 				</td>
 				<td>
 					<select id="uiTreeMap_size">
-						<option>Impact Factor</option>
-						<option>Maximum Length</option>
-						<option>Duration</option>
+						<option value="impactFactor">Impact Factor</option>
+						<option value="length">Maximum Length</option>
+						<option value="duration">Duration</option>
 					</select>
 				</td>
 			</tr>
@@ -60,9 +63,9 @@ Chris Musialek
 				</td>
 				<td>
 					<select id="uiTreeMap_color">
-						<option>Impact Factor</option>
-						<option>Maximum Length</option>
-						<option>Duration</option>
+						<option value="impactFactor">Impact Factor</option>
+						<option value="length">Maximum Length</option>
+						<option value="duration">Duration</option>
 					</select>
 				</td>
 			</tr>
@@ -104,26 +107,34 @@ Chris Musialek
                    name="uiGraphSettingGroup"
                    value="impactFactor"
                    type="radio" />
-            <label>Impact Factor</label>
+            <label id="uiLineGraph_impactFactorLabel">
+				Impact Factor
+			</label>
             <br />
             <input id="uiLineGraph_maximumLength"
                    name="uiGraphSettingGroup"
                    value="length"
                    type="radio" />
-            <label>Maximum Length</label>
+            <label id="uiLineGraph_maximumLengthLabel">
+				Maximum Length
+			</label>
             <br />
             <input id="uiLineGraph_time"
                    name="uiGraphSettingGroup"
                    value="duration"
                    type="radio" />
-            <label>Duration</label>
+            <label id="uiLineGraph_timeLabel">
+				Duration
+			</label>
             
-            <br>
+<!--
+            <br />
             
             <input id="uiLineGraph_applyButton"
                    type="button"
                    value="Apply" />
             <br />
+-->
         </div>
     </div>
 </div>
@@ -135,7 +146,9 @@ Chris Musialek
 </div>
 
 <!-- treemap.js script tag must continue to load after the id=chart div -->
-<script src="scripts/treemap.js"></script>
+<script type="text/javascript">
+	//initializeTreemap();
+</script>
 
 
 <!-- Linechart -->

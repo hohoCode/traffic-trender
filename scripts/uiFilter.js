@@ -16,8 +16,12 @@ uiFilter.init = function(filepath) {
             selectMode: 3,
             children: data
         });
-    });
         
+	    treemap.initialize();
+	    linechart.initialize();
+	    linechartAgg.initialize();
+    });
+    
 	uiFilter.resize();
 	
     $(window).resize(uiFilter.resize);
@@ -43,13 +47,13 @@ uiFilter.search = function() {
 
 //The filter menu updates both the treemap and the linechart
 uiFilter.apply = function() {
-
-    updateTreemap();
-    updateLinechart();
+    treemap.update();
+    linechart.update();
+    linechartAgg.update();
 }
 
 //TODO: Add zoom level option
-uiFilter.getFilterSelections = function(zoomlevel) {
+uiFilter.getSelections = function(zoomlevel) {
     root = $("#uiFilter_tree").dynatree("getRoot");
     sel = root.tree.getSelectedNodes();
     //var data = {};
@@ -62,12 +66,12 @@ uiFilter.getFilterSelections = function(zoomlevel) {
         }
         //data[ sel[i].data.key ] = true;
     }
+    
     //TODO: Currently restricted to 50 items until HTTP 413 error is resolved
     //var query = arr.slice(0,50).join("&");
     var query = arr.join("&");
-    return query;
     
-    /* update the treemap here */
+    return query;
 }
 
 uiFilter.resize = function() {
