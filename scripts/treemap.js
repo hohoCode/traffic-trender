@@ -1,6 +1,6 @@
 /*
  * javascript to create and update the treemap
- * @author Chris Musialek
+ * @author Chris Musialek, Richard B. Johnson
  * @date 11/25/12
  * */
  

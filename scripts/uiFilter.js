@@ -5,7 +5,7 @@
 
 var uiFilter = uiFilter || {}; // namespace
 
-uiFilter.init = function(filepath) {
+uiFilter.init = function(filepath, visualCallback) {
     $("#uiFilterPanel").panel({
         stackable:true
     });
@@ -16,14 +16,16 @@ uiFilter.init = function(filepath) {
             selectMode: 3,
             children: [{"key": "all_states", "title": "All", "expand": true, "children": data}],
 			onClick: function(node, event) {
-				if( node.getEventTargetType(event) == "title" )
-					node.toggleExpand();
+				if( node.getEventTargetType(event) == "title" ) {
+					if (node.data.children != null)
+						node.toggleExpand();
+					else
+						node.toggleSelect();
+				}
 			}
         });
         
-	    treemap.initialize();
-	    linechart.initialize();
-	    linechartAgg.initialize();
+        visualCallback();
     });
     
 	uiFilter.resize();
