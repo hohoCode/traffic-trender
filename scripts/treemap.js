@@ -263,6 +263,8 @@ treemap.run = function(root) {
     function popup(d) {
         return console.log(d.name);
     }
+    
+	$("body").css("cursor", "auto");    
 }
 
 treemap.initialize = function() {
@@ -292,6 +294,8 @@ treemap.update = function() {
 
     var newTreemapUrl = backendurl + "/traffic-trender/worker";
     var data = treemap.buildURL(newcolor,newsize,newfilters);
+
+	$("body").css("cursor", "wait");
 
     $("#chart svg").remove();
     //d3.json(newTreemapUrl, treemap.run);

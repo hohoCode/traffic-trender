@@ -14,7 +14,11 @@ uiFilter.init = function(filepath) {
         $("#uiFilter_tree").dynatree({
             checkbox: true,
             selectMode: 3,
-            children: [{"key": "all_states", "title": "All", "expand": true, "children": data}]
+            children: [{"key": "all_states", "title": "All", "expand": true, "children": data}],
+			onClick: function(node, event) {
+				if( node.getEventTargetType(event) == "title" )
+					node.toggleExpand();
+			}
         });
         
 	    treemap.initialize();
