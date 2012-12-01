@@ -10,9 +10,8 @@ var visualInit = function() {
 }
 
 $(document).ready(function() {
-    uiTreeMap.init();
-    uiFilter.init("backend/sources/filter_menu_data.json", visualInit);
-    uiLineGraph.init();
+    uiTreeMap.init("backend/sources/filter_menu_data.json", visualInit);
+    uiLineChart.init();
     
     $(function() {
         $( "#tabs" ).tabs({

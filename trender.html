@@ -13,8 +13,7 @@ Richard B. Johnson, Chris Musialek
 	<link rel="stylesheet" type="text/css" href="controls/dynatree/src/skin/ui.dynatree.css" />
 	<link rel="stylesheet" type="text/css" href="controls/panel/ui.panel.css" />
 	<link rel="stylesheet" type="text/css" href="styles/uiTreeMap.css" />
-	<link rel="stylesheet" type="text/css" href="styles/uiFilter.css" />
-	<link rel="stylesheet" type="text/css" href="styles/uiLineGraph.css" />
+	<link rel="stylesheet" type="text/css" href="styles/uiLineChart.css" />
     <link rel="stylesheet" type="text/css" href="styles/treemapStyles.css" />
     <link rel="stylesheet" type="text/css" href="styles/linechartStyles.css" />
 
@@ -32,8 +31,7 @@ Richard B. Johnson, Chris Musialek
 
 	<script type="text/javascript" src="scripts/uiUtility.js"></script>
 	<script type="text/javascript" src="scripts/uiTreeMap.js"></script>
-	<script type="text/javascript" src="scripts/uiLineGraph.js"></script>
-	<script type="text/javascript" src="scripts/uiFilter.js"></script>
+	<script type="text/javascript" src="scripts/uiLineChart.js"></script>
 	<script type="text/javascript" src="scripts/uiInitialize.js"></script>
 
 </head>
@@ -71,71 +69,44 @@ Richard B. Johnson, Chris Musialek
 					</select>
 				</td>
 			</tr>
-			<tr>
-				<td colspan="2">
-					<input id="uiTreeMap_applyButton"
-						   type="button"
-						   value="Apply" />
-				</td>
-			</tr>
 			</table>
+
+            <div id="uiTreeMap_filter"></div>
+            
+			<input id="uiTreeMap_applyButton"
+				   type="button"
+				   value="Apply" />
 		</div>
     </div>
+    
+    <!-- Line Chart Panel -->
 
-    <!-- Filter Control Panel -->
-
-    <div id="uiFilterPanel">
-        <h2>Filter</h2>
-        <div id="uiFilterContent">
-            <!--label>Search:</label>
-            <br />
-            <input id="uiFilter_searchTerms" type="text" />
-            <br /-->
-
-            <div id="uiFilter_tree"></div>
-
-            <input id="uiFilter_applyButton"
-                   type="button"
-                   value="Apply" />
-        </div>
-    </div>
-
-    <!-- Line Graph Panel -->
-
-    <div id="uiLineGraphPanel">
-        <h2>Line Graph</h2>
-        <div id="uiLineGraphContent">
-            <input id="uiLineGraph_impactFactor"
+    <div id="uiLineChartPanel">
+        <h2>Line Chart</h2>
+        <div id="uiLineChartContent">
+            <input id="uiLineChart_impactFactor"
                    name="uiGraphSettingGroup"
                    value="impactFactor"
                    type="radio" />
-            <label id="uiLineGraph_impactFactorLabel">
+            <label id="uiLineChart_impactFactorLabel">
 				Impact Factor
 			</label>
             <br />
-            <input id="uiLineGraph_maximumLength"
+            <input id="uiLineChart_maximumLength"
                    name="uiGraphSettingGroup"
                    value="length"
                    type="radio" />
-            <label id="uiLineGraph_maximumLengthLabel">
+            <label id="uiLineChart_maximumLengthLabel">
 				Maximum Length
 			</label>
             <br />
-            <input id="uiLineGraph_time"
+            <input id="uiLineChart_time"
                    name="uiGraphSettingGroup"
                    value="duration"
                    type="radio" />
-            <label id="uiLineGraph_timeLabel">
+            <label id="uiLineChart_timeLabel">
 				Duration
 			</label>
-<!--
-            <br />
-            
-            <input id="uiLineGraph_applyButton"
-                   type="button"
-                   value="Apply" />
-            <br />
--->
         </div>
     </div>
 </div>

@@ -39,7 +39,7 @@ var getMinMaxColors = function(root) {
 treemap.buildURL = function(color, size, filters) {
     var urlsize = size;
     var urlcolor = color;
-    var filtermenu = filters || uiFilter.getSelections();
+    var filtermenu = filters || uiTreeMap.getFilterSelections();
     var params = "type=treemap&color=" + urlcolor + "&size=" + urlsize + "&" + filtermenu;
     return params;
 }
@@ -291,16 +291,22 @@ treemap.update = function() {
 	if (treemap.requesting)
 		return;
 
+    var newfilters = uiTreeMap.getFilterSelections();
+    
+    if (newfilters.length == 0) {
+	    $("#chart svg").remove();
+		return
+    }
+    
 	$("body").css("cursor", "wait");
 	treemap.requesting = true;
 
-    var newfilters = uiFilter.getSelections();
     var newsize = uiTreeMap.getSize();
     var newcolor = uiTreeMap.getColor();
-
+    
     var newTreemapUrl = backendurl + "/traffic-trender/worker";
     var data = treemap.buildURL(newcolor,newsize,newfilters);
-
+    
     //d3.json(newTreemapUrl, treemap.run);
     $.ajax({
         url: newTreemapUrl,

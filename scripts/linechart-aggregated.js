@@ -22,9 +22,7 @@ linechartAgg.initialize = function() {
 linechartAgg.update = function(yvalue) {
 	if (linechartAgg.requesting)
 		return;
-		
-	linechartAgg.requesting = true;
-	
+			
     //get current zoom
     var zoom = $(".grandparent").text();
     var zoomarr = zoom.split(".");
@@ -37,11 +35,19 @@ linechartAgg.update = function(yvalue) {
         curzoom = zoomarr.join("@");
     }
     
-    console.log(curzoom);
+    //console.log(curzoom);
     
     //get filtermenu - should be based on current zoom
-    var filtermenu = uiFilter.getSelections();
-    var yvalue = uiLineGraph.getSelection();
+    var filtermenu = uiTreeMap.getFilterSelections();
+
+    if (filtermenu.length == 0) {
+	    $("#linechart-aggregate svg").remove();
+		return
+    }
+    
+	linechartAgg.requesting = true;
+	
+    var yvalue = uiLineChart.getSelection();
 
     var url = backendurl + "/traffic-trender/worker";
     var linedata = "type=linechart&aggregated=true&y=" + yvalue + "&zoomlevel=" + curzoom + "&" + filtermenu;

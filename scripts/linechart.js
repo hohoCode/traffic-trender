@@ -134,7 +134,7 @@ linechart.initialize = function() {
 	
 	//Set some reasonable defaults
 	var defaultY = "impactFactor";
-	uiLineGraph.setSelection(defaultY);
+	uiLineChart.setSelection(defaultY);
 	
 	linechart.update();
 }
@@ -147,9 +147,7 @@ linechart.initialize = function() {
 linechart.update = function() {
 	if (linechart.requesting)
 		return;
-
-	linechart.requesting = true;
-	
+		
     //get current zoom
     var zoom = $(".grandparent").text();
     var zoomarr = zoom.split(".");
@@ -162,11 +160,19 @@ linechart.update = function() {
         curzoom = zoomarr.join("@");
     }
     
-    console.log(curzoom);
+    //console.log(curzoom);
 	
     //get filtermenu - should be based on current zoom
-    var filtermenu = uiFilter.getSelections();
-    var yvalue = uiLineGraph.getSelection();
+    var filtermenu = uiTreeMap.getFilterSelections();
+    
+    if (filtermenu.length == 0) {
+	    $("#linechart svg").remove();
+		return
+    }
+
+	linechart.requesting = true;
+
+    var yvalue = uiLineChart.getSelection();
 
     var url = backendurl + "/traffic-trender/worker";
     var linedata = "type=linechart&y=" + yvalue + "&zoomlevel=" + curzoom + "&" + filtermenu;

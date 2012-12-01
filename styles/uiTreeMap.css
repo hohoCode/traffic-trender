@@ -44,6 +44,20 @@ Richard B. Johnson
 	margin-bottom:0.1em;
 }
 
+#uiTreeMap_filter
+{
+	display:none;
+	margin-top: 0.5em;
+	margin-bottom: 0.8em;
+}
+
+#uiTreeMap_filter span.dynatree-icon
+{
+	width:0;
+	padding:0;
+	margin:0;
+}
+
 #uiTreeMap_applyButton
 {
 	width:100%;
