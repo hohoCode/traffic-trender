@@ -6,8 +6,13 @@
  
 var treemap = treemap || {}; // namespace
 
+//class defaults
+treemap.margin = {top: 20, right: 10, bottom: 0, left: 0};
+treemap.width = 1180 - 80;
+treemap.height = 700 - 180 - treemap.margin.top - treemap.margin.bottom;
+
 //TODO: recreate using a recursive function or something innate to js, this is hardcoded to our hierarchy
-var getMinMaxColors = function(root) {
+treemap.getMinMaxColors = function(root) {
     var minColor = Number.MAX_VALUE, maxColor = Number.MIN_VALUE, avgColor = Number.MIN_VALUE;
 
     var colorSum = 0, colorNum = 0;
@@ -44,29 +49,25 @@ treemap.buildURL = function(color, size, filters) {
     return params;
 }
 
-treemap.run = function(root) {
+treemap.colorScale = d3.scale.linear()
+    .domain([1, 40, 6000])
+    .range(["green", "white", "red"]);
 
-    //console.log(root);
+treemap.xScale = d3.scale.linear()
+    .domain([0, treemap.width])
+    .range([0, treemap.width]);
 
-    var margin = {top: 20, right: 10, bottom: 0, left: 0},
-        width = 1180 - 80,
-        height = 700 - 180 - margin.top - margin.bottom,
-        formatNumber = d3.format(",d"),
-        transitioning;
+treemap.yScale = d3.scale.linear()
+    .domain([0, treemap.height])
+    .range([0, treemap.height]);
 
-    var tmColor = d3.scale.linear()
-        .domain([1, 40, 6000])
-        .range(["green", "white", "red"]);
+treemap.run = function(root, margin, height, width) {
 
-    var x = d3.scale.linear()
-        .domain([0, width])
-        .range([0, width]);
+        margin = margin || treemap.margin;
+        width = width || treemap.width;
+        height = height || treemap.height;
 
-    var y = d3.scale.linear()
-        .domain([0, height])
-        .range([0, height]);
-
-    var treemap = d3.layout.treemap()
+    var d3treemap = d3.layout.treemap()
         //.children(function(d, depth) { return depth ? null: d.children; })
         .sort(function(a, b) { return a.size - b.size; })
         .ratio(height / width * 0.5 * (1 + Math.sqrt(5)))
@@ -77,7 +78,7 @@ treemap.run = function(root) {
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.bottom + margin.top)
         .style("margin-left", -margin.left + "px")
-        .style("margin.right", -margin.right + "px")
+        .style("margin-right", -margin.right + "px")
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .style("shape-rendering", "crispEdges");
@@ -95,16 +96,16 @@ treemap.run = function(root) {
         .attr("y", 6 - margin.top)
         .attr("dy", ".75em");
 
-    var minMax = getMinMaxColors(root);
+    var minMax = treemap.getMinMaxColors(root);
     //finally set color domain since we have the data
-    tmColor.domain(minMax);
+    treemap.colorScale.domain(minMax);
 
     initialize(root);
     accumulate(root);
     accumulateColor(root);
     layout(root);
 
-    display(root);
+    treemap.display(root);
 
     function initialize(root) {
         root.x = root.y = 0;
@@ -135,8 +136,7 @@ treemap.run = function(root) {
     // coordinates. This lets us use a viewport to zoom.
     function layout(d) {
         if (d.children) {
-            treemap.nodes({children: d.children});
-            //console.log(value);
+            d3treemap.nodes({children: d.children});
             d.children.forEach(function(c) {
                 c.x = d.x + c.x * d.dx;
                 c.y = d.y + c.y * d.dy;
@@ -149,120 +149,121 @@ treemap.run = function(root) {
         }
     }
 
-    function display(d) {
-        grandparent
-            .datum(d.parent)
-            .on("click", transition)
-            .select("text")
-            .text(name(d));
+}
 
-        var g1 = svg.insert("g", ".grandparent")
-            .datum(d)
-            .attr("class", "treemap");
+treemap.display = function(d) {
+    var grandparent = d3.select("g.grandparent");
+    var svg = d3.select("#chart g");
 
-        var g = g1.selectAll("g")
-            .data(d.children)
-            .enter().append("g");
+    grandparent
+        .datum(d.parent)
+        .on("click", treemap.transition)
+        .select("text")
+        .text(treemap.name(d));
 
-        g.filter(function(d) { return d.children; })
-            .classed("states", true)
-            .on("click", transition);
+    var g1 = svg.insert("g", ".grandparent")
+        .datum(d)
+        .attr("class", "treemap");
 
-        var g2 = g.selectAll(".states")
-            .data(function(d) { return d.children || [d]; })
-            .enter()
-            .append("g")
-            .attr("class", "county");
-        var g3 = g2.selectAll(".county")
-            .data(function(d) { return d.children || [d]; })
-            .enter()
-            .append("g")
-            .attr("class", "road");
-        g3.selectAll(".road")
-            .data(function(d) { return d.children || [d]; })
-            .enter().append("rect")
-            .attr("class", "location")
-            .style("fill", function(d) { return tmColor(d.color);} )
-            .call(rect);
+    var g = g1.selectAll("g")
+        .data(d.children)
+        .enter().append("g");
 
-        g.append("rect")
-            .attr("class", "parent")
-            .call(rect)
-            .append("title")
-        //.text(function(d) { return formatNumber(d.value); });
+    g.filter(function(d) { return d.children; })
+        .classed("states", true)
+        .on("click", treemap.transition);
 
-        g.append("text")
-            .attr("dy", ".75em")
-            .text(function(d) { return d.name; })
-            .call(text);
+    var g2 = g.selectAll(".states")
+        .data(function(d) { return d.children || [d]; })
+        .enter()
+        .append("g")
+        .attr("class", "county");
+    var g3 = g2.selectAll(".county")
+        .data(function(d) { return d.children || [d]; })
+        .enter()
+        .append("g")
+        .attr("class", "road");
+    g3.selectAll(".road")
+        .data(function(d) { return d.children || [d]; })
+        .enter().append("rect")
+        .attr("class", "location")
+        .style("fill", function(d) { return treemap.colorScale(d.color);} )
+        .call(treemap.rect);
 
-        function transition(d) {
-            if (transitioning || !d) return;
-            transitioning = true;
+    g.append("rect")
+        .attr("class", "parent")
+        .call(treemap.rect)
+        .append("title")
+    //.text(function(d) { return formatNumber(d.value); });
 
-            var g2 = display(d),
-                t1 = g1.transition().duration(750),
-                t2 = g2.transition().duration(750);
+    g.append("text")
+        .attr("dy", ".75em")
+        .text(function(d) { return d.name; })
+        .call(treemap.text);
 
-            //Update linechart
-            linechart.update(); //in linechart.js
-            linechartAgg.update(); //in linechart-aggregated.js
+    return g;
+}
 
-            // Update the domain only after entering new elements.
-            x.domain([d.x, d.x + d.dx]);
-            y.domain([d.y, d.y + d.dy]);
-            //TODO: need to update color domain here
+treemap.name = function(d) {
+    return d.parent
+        ? treemap.name(d.parent) + "." + d.name
+        : d.name;
+}
 
-            // Enable anti-aliasing during the transition.
-            svg.style("shape-rendering", null);
+treemap.text = function(text){
+    text.attr("x", function(d) { return treemap.xScale(d.x) + 6; })
+        .attr("y", function(d) { return treemap.yScale(d.y) + 6; });
+}
 
-            // Draw child nodes on top of parent nodes.
-            //svg.selectAll(".depth").sort(function(a, b) { return a.depth - b.depth; });
+treemap.rect = function(rect) {
+    rect.attr("x", function(d) { return treemap.xScale(d.x); })
+        .attr("y", function(d) { return treemap.yScale(d.y); })
+        .attr("width", function(d) { return treemap.xScale(d.x + d.dx) - treemap.xScale(d.x); })
+        .attr("height", function(d) { return treemap.yScale(d.y + d.dy) - treemap.yScale(d.y); });
+}
 
-            // Fade-in entering text.
-            g2.selectAll("text").style("fill-opacity", 0);
+treemap.transitioning = false;
 
-            // Transition to the new view.
-            t1.selectAll("text").call(text).style("fill-opacity", 0);
-            t2.selectAll("text").call(text).style("fill-opacity", 1);
-            t1.selectAll("rect").call(rect);
-            t2.selectAll("rect").call(rect);
+treemap.transition = function(d) {
+    if (treemap.transitioning || !d) return;
+    treemap.transitioning = true;
 
-            // Remove the old node when the transition is finished.
-            t1.remove().each("end", function() {
-                svg.style("shape-rendering", "crispEdges");
-                transitioning = false;
-            });
+    var svg = d3.select("#chart g");
+    var g1 = d3.select("#chart g g");
+    var g2 = treemap.display(d),
+        t1 = g1.transition().duration(750),
+        t2 = g2.transition().duration(750);
 
-        }
+    //Update linechart
+    linechart.update(); //in linechart.js
+    linechartAgg.update(); //in linechart-aggregated.js
 
-        return g;
-    }
+    // Update the domain only after entering new elements.
+    treemap.xScale.domain([d.x, d.x + d.dx]);
+    treemap.yScale.domain([d.y, d.y + d.dy]);
+    //TODO: need to update color domain here
 
-    function calccolor(d) {
-        return !d.children ? tmColor(d.color) : null;
-    }
-    function text(text) {
-        text.attr("x", function(d) { return x(d.x) + 6; })
-            .attr("y", function(d) { return y(d.y) + 6; });
-    }
+    // Enable anti-aliasing during the transition.
+    svg.style("shape-rendering", null);
 
-    function rect(rect) {
-        rect.attr("x", function(d) { return x(d.x); })
-            .attr("y", function(d) { return y(d.y); })
-            .attr("width", function(d) { return x(d.x + d.dx) - x(d.x); })
-            .attr("height", function(d) { return y(d.y + d.dy) - y(d.y); });
-    }
+    // Draw child nodes on top of parent nodes.
+    //svg.selectAll(".depth").sort(function(a, b) { return a.depth - b.depth; });
 
-    function name(d) {
-        return d.parent
-            ? name(d.parent) + "." + d.name
-            : d.name;
-    }
+    // Fade-in entering text.
+    g2.selectAll("text").style("fill-opacity", 0);
 
-    function popup(d) {
-        return console.log(d.name);
-    }    
+    // Transition to the new view.
+    t1.selectAll("text").call(treemap.text).style("fill-opacity", 0);
+    t2.selectAll("text").call(treemap.text).style("fill-opacity", 1);
+    t1.selectAll("rect").call(treemap.rect);
+    t2.selectAll("rect").call(treemap.rect);
+
+    // Remove the old node when the transition is finished.
+    t1.remove().each("end", function() {
+        svg.style("shape-rendering", "crispEdges");
+        treemap.transitioning = false;
+    });
+
 }
 
 treemap.initialize = function() {
@@ -310,8 +311,7 @@ treemap.update = function() {
     
     var newTreemapUrl = backendurl + "/traffic-trender/worker";
     var data = treemap.buildURL(newcolor,newsize,newfilters);
-    
-    //d3.json(newTreemapUrl, treemap.run);
+
     $.ajax({
         url: newTreemapUrl,
         type: 'POST',
