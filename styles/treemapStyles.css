@@ -18,7 +18,7 @@
 #tabs {
     position:absolute;
     top: 525px;
-    width: 1100px;
+    width: 1095px;
 }
 
 #visualizations {
@@ -53,6 +53,10 @@ rect {
     stroke: #000;
 }
 
+rect.location {
+    pointer-events: all;
+}
+
 rect.parent,
 .grandparent rect {
     stroke-width: 3px;
@@ -65,6 +69,7 @@ rect.parent,
 .states rect.parent,
 .grandparent rect {
     cursor: pointer;
+    stroke-width: 2.5px;
 }
 
 rect.parent {

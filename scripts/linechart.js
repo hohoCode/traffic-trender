@@ -6,11 +6,45 @@
  
 var linechart = linechart || {}; // namespace
 
-linechart.addLinePopup = function(d) {
+linechart.addLinePopup = function(d, div) {
     //var xy = d3.mouse(this);
     $("#popup").text(d.name);
-    d3.select(this).style("stroke-width", "3.5px");
+    d3.select(div).style("stroke-width", "3.5px");
 }
+
+linechart.highlighted = false;
+
+linechart.onClick = function(d) {
+    linechart.highlightLocation(d);
+    dod.showLineChartDetails(d);
+}
+
+linechart.onHover = function(d) {
+    dod.showLineChartDetails(d);
+    linechart.addLinePopup(d, this);
+}
+
+linechart.highlightLocation = function(d) {
+    if (linechart.highlighted) {
+        $("#chart rect.location").each( function(i) {
+            var fill = $(this).attr('oldfill');
+            $(this).attr('oldfill', '#bbb');
+            this.style.fill = fill;
+        });
+        linechart.highlighted = false;
+    } else {
+        //gray out all other rects except the selection
+        $("#chart rect.location").each( function(i) {
+            var fill = this.style.fill;
+            $(this).attr('oldfill', fill);
+            if (this.__data__.name != d.name) {
+                this.style.fill = "#bbb";
+            }
+        });
+        linechart.highlighted = true;
+    }
+}
+
 
 linechart.run = function (trends, id) {
 
@@ -50,7 +84,7 @@ linechart.run = function (trends, id) {
 
     var color = d3.scale.category10();
 
-    var margin = {top: 0, right: 60, bottom: 20, left: 80},
+    var margin = {top: 0, right: 25, bottom: 20, left: 80},
         width = 1100 - margin.left - margin.right,
         height = 250 - margin.top - margin.bottom;
 
@@ -105,8 +139,10 @@ linechart.run = function (trends, id) {
         .attr("class", "line")
         .attr("d", function(d) { return line(d.bottlenecks); })
         .style("stroke", function(d) { return color(d.name); })
-        .on("mouseover", linechart.addLinePopup)
-        .on("mouseout", function() { $("#popup").text(""); d3.select(this).style("stroke-width", "1.5px");});
+        .on("click", linechart.onClick)
+        .on("mouseover", linechart.onHover)
+        .on("mouseout", function(d) { $("#popup").text(""); d3.select(this).style("stroke-width", "1.5px");
+            dod.hideLineChartDetails(d);});
 
     path.attr("stroke-dasharray", function(d){
         return  d3.select(this).node().getTotalLength() + "," +  d3.select(this).node().getTotalLength();
@@ -119,13 +155,13 @@ linechart.run = function (trends, id) {
         .ease("linear")
         .attr("stroke-dashoffset", 0);
 
-    location.append("text")
+    /*location.append("text")
         .datum(function(d) { return {name: d.name, bottlenecks: d.bottlenecks[d.bottlenecks.length - 1]}; })
         .attr("transform", function(d) { return "translate(" + x(d.bottlenecks.date) + "," + y(d.bottlenecks.value) + ")"; })
         .attr("x", 3)
         .attr("dy", ".35em")
         .style("fill", function(d) { return color(d.name); })
-        .text(function(d) { return d.name; });
+        .text(function(d) { return d.name; });*/
 
 }
 

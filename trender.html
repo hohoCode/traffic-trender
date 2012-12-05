@@ -16,6 +16,7 @@ Richard B. Johnson, Chris Musialek
 	<link rel="stylesheet" type="text/css" href="styles/uiLineChart.css" />
     <link rel="stylesheet" type="text/css" href="styles/treemapStyles.css" />
     <link rel="stylesheet" type="text/css" href="styles/linechartStyles.css" />
+    <link rel="stylesheet" type="text/css" href="styles/detailsdemand.css" />
 
     <script type="text/javascript" src="controls/jquery/ui/js/jquery-1.8.2.js"></script>
     <script type="text/javascript" src="controls/jquery/ui/js/jquery-ui-1.9.1.custom.js"></script>    
@@ -25,6 +26,7 @@ Richard B. Johnson, Chris Musialek
 	<script type="text/javascript" src="controls/d3/d3.v2.min.js"></script>
 
     <script type="text/javascript" src="scripts/globals.js"></script>
+    <script type="text/javascript" src="scripts/detailsdemand.js"></script>
 	<script type="text/javascript" src="scripts/treemap.js"></script>
 	<script type="text/javascript" src="scripts/linechart.js"></script>
 	<script type="text/javascript" src="scripts/linechart-aggregated.js"></script>
@@ -125,6 +127,49 @@ Richard B. Johnson, Chris Musialek
 		<div id="linechart-aggregate"></div>
 		<div id="popup"></div>
 	</div>
+</div>
+<div id="details">
+    <table id="dodTreemap" width="100%">
+        <caption>Details on Demand</caption>
+        <tr>
+            <td class="caption">Name:</td>
+            <td class="name"></td>
+        </tr>
+        <tr>
+            <td id="dodsize" class="caption">Size:</td>
+            <td class="size"></td>
+        </tr>
+        <tr>
+            <td id="dodcolor" class="caption">Color:</td>
+            <td class="color"></td>
+        </tr>
+    </table>
+    <table id="dodLineChart" width="100%">
+        <caption>Line Chart</caption>
+        <tr>
+            <td class="caption">State:</td>
+            <td class="tdstate"></td>
+        </tr>
+        <tr>
+            <td class="caption">County:</td>
+            <td class="tdcounty"></td>
+        </tr>
+        <tr>
+            <td class="caption">Road Name:</td>
+            <td class="tdroad"></td>
+        </tr>
+        <tr>
+            <td class="caption">Location Name:</td>
+            <td class="tdlocation"></td>
+        </tr>
+        <tr>
+            <table width="100%" border="1" id="dodvalues">
+                <th>Date</th>
+                <th>Value</th>
+            </table>
+        </tr>
+
+    </table>
 </div>
 
 </body>

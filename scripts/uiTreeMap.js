@@ -53,8 +53,17 @@ uiTreeMap.reportChange = function() {
 }
 
 uiTreeMap.apply = function() {
-	if (uiTreeMap.changed)
+	if (uiTreeMap.changed) {
+        //Update details on demand
+        var val = uiTreeMap.getSize();
+        var dodsize = $("#uiTreeMap_size option[value='"+val+"']").text();
+        $("#dodsize").text(dodsize + ":");
+        var val2 = uiTreeMap.getColor();
+        var dodcolor = $("#uiTreeMap_size option[value='"+val2+"']").text();
+        $("#dodcolor").text(dodcolor + ":");
 		treemap.update();
+
+    }
 		
 	if (uiTreeMap.changedFilter) {
 		linechart.update();

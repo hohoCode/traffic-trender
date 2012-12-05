@@ -193,7 +193,7 @@ treemap.display = function(d) {
     g.append("rect")
         .attr("class", "parent")
         .call(treemap.rect)
-        .append("title")
+        .on("mouseover", dod.showDetailsOnDemand);
     //.text(function(d) { return formatNumber(d.value); });
 
     g.append("text")
@@ -216,6 +216,7 @@ treemap.text = function(text){
 }
 
 treemap.rect = function(rect) {
+
     rect.attr("x", function(d) { return treemap.xScale(d.x); })
         .attr("y", function(d) { return treemap.yScale(d.y); })
         .attr("width", function(d) { return treemap.xScale(d.x + d.dx) - treemap.xScale(d.x); })

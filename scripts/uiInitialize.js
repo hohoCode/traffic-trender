@@ -7,6 +7,7 @@ var visualInit = function() {
     treemap.initialize();
     linechart.initialize();
     linechartAgg.initialize();
+    dod.initialize();
 }
 
 $(document).ready(function() {
